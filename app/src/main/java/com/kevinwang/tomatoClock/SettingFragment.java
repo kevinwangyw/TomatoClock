@@ -30,6 +30,8 @@ public class SettingFragment extends PreferenceFragment {
         setHasOptionsMenu(true);
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.settings_preference);
+
+
     }
 
     @Override
@@ -47,9 +49,19 @@ public class SettingFragment extends PreferenceFragment {
         if (preference instanceof PreferenceScreen) {
             setUpNestedScreen((PreferenceScreen) preference);
         }
+/*        else if (preference instanceof  SeekBarPreference) {
+            switch(preference.getKey()) {
+                case "long_rest_interval_count":
+                    ((SeekBarPreference) preference).setSeekBarInfo("counts");
+                    break;
+                default:
+                    ((SeekBarPreference) preference).setSeekBarInfo("mins");
+            }
+        }*/
 
         return false;
     }
+
 
     //PreferenceScreens are based as a wrapper dialog,
     // so we need to capture the dialog layout to add the toolbar to it.

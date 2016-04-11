@@ -12,11 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/input_task_hint"
-        android:textSize="16sp"
+        android:textSize="20sp"
         android:paddingTop="6dp"
         android:paddingBottom="6dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:paddingLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:enabled="true"/>
 
     <ListView
