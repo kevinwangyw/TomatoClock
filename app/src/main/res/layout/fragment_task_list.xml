@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#BFBFBF"
+    >
+
+    <EditText
+        android:id="@+id/taskEdit"
+        android:background="@android:color/background_light"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/input_task_hint"
+        android:textSize="16sp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:enabled="true"/>
+
+    <ListView
+        android:id="@android:id/list"
+        android:background="@android:color/background_light"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/taskEdit">
+    </ListView>
+
+</RelativeLayout>

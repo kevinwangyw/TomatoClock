@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar_setting"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#404040"
+    android:minHeight="?attr/actionBarSize"
+    app:titleTextColor="@android:color/white"
+    app:navigationIcon="@mipmap/ic_action_arrow_left"
+    app:title="@string/setting_title">
+<!--
+    <TextView
+        android:id="@+id/setting_title_toolbar"
+        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:text="@string/setting_title"
+        android:textColor="@android:color/white" />
+        -->
+
+</android.support.v7.widget.Toolbar>

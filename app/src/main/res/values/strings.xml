@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">番茄工作法</string>
+    <string name="taskList">土豆列表</string>
+    <string name="historyList">历史</string>
+    <string name="input_task_hint">添加新土豆</string>
+    <string name="task_start">开始工作</string>
+    <string name="count_down_clock_text">25 : 00</string>
+    <string name="accounts_setting">账户</string>
+    <string name="account_name">kevinisbest@qq.com</string>
+    <string name="sign_out_comfirm">确定要登出吗</string>
+    <string name="monthgoal">40</string>
+    <string name="weekgoal">8</string>
+    <string name="daygoal">160</string>
+    <string name="ui_setting_title">界面设置</string>
+    <string name="goal_setting_title">目标</string>
+    <string name="tomato_setting_title">番茄时长</string>
+    <string name="rington_setting_title">提示音效</string>
+    <string name="setting_title">设置</string>
+    <string name="seekbar_text">abc</string>
+</resources>

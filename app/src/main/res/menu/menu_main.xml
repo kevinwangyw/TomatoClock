@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_work"
+        android:icon="@mipmap/ic_action_playback_play"
+        app:showAsAction="always"
+        android:title="@string/task_start">
+    </item>
+
+    <item
+        android:id="@+id/menu_settings"
+        android:icon="@mipmap/ic_action_overflow"
+        app:showAsAction="always"
+        android:title="@string/setting_title">
+    </item>
+</menu>

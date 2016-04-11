@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="settings"
+    android:title="@string/setting_title">
+
+    <PreferenceCategory
+        android:title="@string/accounts_setting">
+        <PreferenceScreen
+            android:key="account_pref_screen"
+            android:title="账户名"
+            android:summary="@string/account_name">
+            <ListPreference
+                android:key="account_name"
+                android:title="@string/account_name"
+                />
+            <EditTextPreference
+                android:title="注销账户"
+                android:dialogTitle="@string/sign_out_comfirm"
+                android:key="account_sign_out"
+                android:editable="false"
+                />
+        </PreferenceScreen>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="音效">
+        <PreferenceScreen
+            android:key="rington_pref_screen"
+            android:title="@string/rington_setting_title">
+            <PreferenceCategory
+                android:title="震动">
+                <SwitchPreference
+                    android:title="开启震动"
+                    android:key="is_vibrate"
+                    android:defaultValue="false"/>
+                <SwitchPreference
+                    android:title="延长震动时间"
+                    android:summary="将延长震动时间至5秒"
+                    android:key="is_long_vibrate"
+                    android:defaultValue="false"
+                    android:enabled="false"/>
+            </PreferenceCategory>
+
+            <PreferenceCategory
+                android:title="响铃">
+                <SwitchPreference
+                    android:title="使用系统音效"
+                    android:key="ringtone_using_state"
+                    android:defaultValue="false"/>
+                <RingtonePreference
+                    android:key="rington_setting"
+                    android:title="系统音效"
+                    android:enabled="false">
+                </RingtonePreference>
+            </PreferenceCategory>
+        </PreferenceScreen>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="番茄设置">
+
+        <PreferenceScreen
+            android:key="tomato_length_pre_screen"
+            android:title="@string/tomato_setting_title">
+            <com.kevinwang.tomatoClock.SeekBarPreference
+                android:title="番茄时间长度"
+                android:key="tomato_length"/>
+            <com.kevinwang.tomatoClock.SeekBarPreference
+                android:title="休息时间长度"
+                android:key="rest_length"/>
+            <com.kevinwang.tomatoClock.SeekBarPreference
+                android:title="长休息时间长度"
+                android:key="long_rest_length"/>
+            <com.kevinwang.tomatoClock.SeekBarPreference
+                android:title="长休息间隔"
+                android:key="long_rest_interval_count"
+                />
+        </PreferenceScreen>
+
+        <PreferenceScreen
+            android:key="goal_pref_screen"
+            android:title="@string/goal_setting_title">
+            <EditTextPreference
+                android:title="每日目标番茄数"
+                android:key="day_goal"
+                android:summary="@string/daygoal"/>
+            <EditTextPreference
+                android:title="每周目标番茄数"
+                android:key="week_goal"
+                android:summary="@string/weekgoal"/>
+            <EditTextPreference
+                android:title="每月目标番茄数"
+                android:key="month_goal"
+                android:summary="@string/monthgoal"/>
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="other_pref_screen"
+        android:title="其他">
+        <PreferenceScreen
+            android:title="@string/ui_setting_title">
+
+        </PreferenceScreen>
+
+        <PreferenceScreen
+            android:key="about_tomato_task"
+            android:title="关于番茄工作法">
+
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
