@@ -8,9 +8,9 @@
     <string name="accounts_setting">账户</string>
     <string name="account_name">kevinisbest@qq.com</string>
     <string name="sign_out_comfirm">确定要登出吗</string>
-    <string name="monthgoal">40</string>
-    <string name="weekgoal">8</string>
-    <string name="daygoal">160</string>
+    <string name="monthgoal">160</string>
+    <string name="weekgoal">40</string>
+    <string name="daygoal">8</string>
     <string name="ui_setting_title">界面设置</string>
     <string name="goal_setting_title">目标</string>
     <string name="tomato_setting_title">番茄时长</string>

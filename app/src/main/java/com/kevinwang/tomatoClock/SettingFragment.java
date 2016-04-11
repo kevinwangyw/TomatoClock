@@ -1,10 +1,13 @@
 package com.kevinwang.tomatoClock;
 
 import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
@@ -17,7 +20,14 @@ import android.widget.ListView;
 /**
  * Created by lenovo on 2016/4/9.
  */
-public class SettingFragment extends PreferenceFragment {
+public class SettingFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+    private SharedPreferences sharedPreferences;
+    private static final String KEY_DAY_GOAL = "day_goal";
+    private static final String KEY_WEEK_GOAL = "week_goal";
+    private static final String KEY_MONTH_GOAL = "month_goal";
+    private static final String KEY_RINGTONE_USING_STATE = "ringtone_using_state";
+    private static final String KEY_RINGTONE_SETTING = "ringtone_setting";
+
     public static SettingFragment newInstance(Bundle bundle) {
         SettingFragment settingFragment = new SettingFragment();
         settingFragment.setArguments(bundle);
@@ -30,8 +40,19 @@ public class SettingFragment extends PreferenceFragment {
         setHasOptionsMenu(true);
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.settings_preference);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -106,4 +127,34 @@ public class SettingFragment extends PreferenceFragment {
             }
         });
     }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        System.out.println("In onSharedPreferenceChanged method and the key is "+key);
+        if (key.compareTo(KEY_DAY_GOAL) == 0) {
+/*            Integer day_goal = Integer.valueOf(sharedPreferences.getString(KEY_DAY_GOAL,""));
+            System.out.println(day_goal);*/
+            ((EditTextPreference)findPreference(key)).setSummary(sharedPreferences.getString(KEY_DAY_GOAL,""));
+        }
+        else if (key.compareTo(KEY_WEEK_GOAL) == 0)
+        {
+            ((EditTextPreference)findPreference(key)).setSummary(sharedPreferences.getString(KEY_WEEK_GOAL,""));
+        }
+        else if (key.compareTo(KEY_MONTH_GOAL) == 0)
+        {
+            ((EditTextPreference)findPreference(key)).setSummary(sharedPreferences.getString(KEY_MONTH_GOAL,""));
+        }
+        else if (key.compareTo(KEY_RINGTONE_USING_STATE) == 0) {
+            //System.out.println(sharedPreferences.getBoolean(key,false));
+            if (sharedPreferences.getBoolean(key,false)) {
+                findPreference(KEY_RINGTONE_SETTING).setEnabled(true);
+            }
+            else {
+                findPreference(KEY_RINGTONE_SETTING).setEnabled(false);
+            }
+        }
+    }
+
+
+
 }

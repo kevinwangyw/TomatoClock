@@ -48,7 +48,7 @@
                     android:key="ringtone_using_state"
                     android:defaultValue="false"/>
                 <RingtonePreference
-                    android:key="rington_setting"
+                    android:key="ringtone_setting"
                     android:title="系统音效"
                     android:enabled="false">
                 </RingtonePreference>
@@ -83,15 +83,21 @@
             <EditTextPreference
                 android:title="每日目标番茄数"
                 android:key="day_goal"
-                android:summary="@string/daygoal"/>
+                android:summary="@string/daygoal"
+                android:defaultValue="8"
+                android:inputType="number"/>
             <EditTextPreference
                 android:title="每周目标番茄数"
                 android:key="week_goal"
-                android:summary="@string/weekgoal"/>
+                android:summary="@string/weekgoal"
+                android:defaultValue="40"
+                android:inputType="number"/>
             <EditTextPreference
                 android:title="每月目标番茄数"
                 android:key="month_goal"
-                android:summary="@string/monthgoal"/>
+                android:summary="@string/monthgoal"
+                android:defaultValue="160"
+                android:inputType="number"/>
         </PreferenceScreen>
 
     </PreferenceCategory>
