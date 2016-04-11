@@ -20,12 +20,30 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
     private TextView val_text;
     private OnSeekBarPrefsChangeListener mListener = null;
     private String mtype;
+    private int seekbar_case;
 
     public SeekBarPreference(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         this.context = context;
-        setMax(mMax);
+        switch (getKey()) {
+            case "long_rest_interval_count":
+                setMax(6);
+                seekbar_case = 4;
+                break;
+            case "long_rest_length":
+                setMax(15);
+                seekbar_case = 10;
+                break;
+            case "rest_length":
+                setMax(10);
+                seekbar_case = 5;
+                break;
+            case "tomato_length":
+                setMax(25);
+                seekbar_case = 15;
+                break;
+        }
         setLayoutResource(R.layout.seekbar_preference);
     }
 
@@ -56,7 +74,7 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
         seekBar.setEnabled(isEnabled());
         seekBar.setOnSeekBarChangeListener(this);
         val_text = (TextView) view.findViewById(R.id.seekbar_info);
-        val_text.setText(String.valueOf(mProgress)+mtype);
+        val_text.setText(String.valueOf(mProgress+seekbar_case)+" "+mtype);
     }
 
     /* @Override
@@ -118,7 +136,7 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
     }
 
     public int getProgress() {
-        return mProgress;
+        return mProgress + seekbar_case;
     }
 
     public interface OnSeekBarPrefsChangeListener {
@@ -140,10 +158,10 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
                 //Call this method callChangeListener after the user changes the preference, but before the
                 //internal state is set. This allows the client to ignore the user value.
                 setProgress(progress, false);
-                val_text.setText(String.valueOf(mProgress)+mtype);
+                val_text.setText(String.valueOf(mProgress + seekbar_case) + " " + mtype);
             } else {
                 seekBar.setProgress(mProgress);
-                val_text.setText(String.valueOf(mProgress)+mtype);
+                val_text.setText(String.valueOf(mProgress + seekbar_case) + " " + mtype);
             }
         }
     }
@@ -273,6 +291,6 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
         notifyChanged();
 
         // Set this Preference's widget to reflect the restored state
-        val_text.setText(String.valueOf(mProgress)+mtype);
+        val_text.setText(String.valueOf(mProgress + seekbar_case) + " " + mtype);
     }
 }
