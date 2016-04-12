@@ -28,4 +28,5 @@ public class SettingsActivity extends AppCompatActivity {
         android.app.FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().add(R.id.setting_fragment_container,SettingFragment.newInstance(savedInstanceState)).commit();
     }
+
 }

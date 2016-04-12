@@ -50,7 +50,10 @@
                 <RingtonePreference
                     android:key="ringtone_setting"
                     android:title="系统音效"
-                    android:enabled="false">
+                    android:showSilent="true"
+                    android:showDefault="true"
+                    android:enabled="false"
+                    android:ringtoneType="all">
                 </RingtonePreference>
             </PreferenceCategory>
         </PreferenceScreen>

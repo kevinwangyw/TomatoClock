@@ -2,6 +2,9 @@ package com.kevinwang.tomatoClock;
 
 import android.app.Dialog;
 import android.content.SharedPreferences;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -9,7 +12,9 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.preference.RingtonePreference;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,13 +25,15 @@ import android.widget.ListView;
 /**
  * Created by lenovo on 2016/4/9.
  */
-public class SettingFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingFragment extends PreferenceFragment implements SharedPreferences
+        .OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
     private SharedPreferences sharedPreferences;
     private static final String KEY_DAY_GOAL = "day_goal";
     private static final String KEY_WEEK_GOAL = "week_goal";
     private static final String KEY_MONTH_GOAL = "month_goal";
     private static final String KEY_RINGTONE_USING_STATE = "ringtone_using_state";
     private static final String KEY_RINGTONE_SETTING = "ringtone_setting";
+    private RingtonePreference mRingTone;
 
     public static SettingFragment newInstance(Bundle bundle) {
         SettingFragment settingFragment = new SettingFragment();
@@ -40,7 +47,24 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         setHasOptionsMenu(true);
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.settings_preference);
+
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        ((EditTextPreference) findPreference(KEY_DAY_GOAL)).setSummary(sharedPreferences.getString(KEY_DAY_GOAL, ""));
+        ((EditTextPreference) findPreference(KEY_WEEK_GOAL)).setSummary(sharedPreferences.getString(KEY_WEEK_GOAL, ""));
+        ((EditTextPreference) findPreference(KEY_MONTH_GOAL)).setSummary(sharedPreferences.getString(KEY_MONTH_GOAL,
+                ""));
+
+        mRingTone = (RingtonePreference)findPreference(KEY_RINGTONE_SETTING);
+        if (sharedPreferences.getBoolean(KEY_RINGTONE_USING_STATE, false)) {
+            mRingTone.setEnabled(true);
+        } else {
+            sharedPreferences.edit().putString(KEY_RINGTONE_SETTING, "".toString()).commit();
+            mRingTone.setEnabled(false);
+        }
+        mRingTone.setSummary(getRingtoneName(Uri.parse(sharedPreferences.getString(KEY_RINGTONE_SETTING,""))));
+        mRingTone.setOnPreferenceChangeListener(this);
+        mRingTone.setOnPreferenceClickListener(this);
     }
 
     @Override
@@ -56,6 +80,11 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -64,8 +93,6 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
     @Override
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
         super.onPreferenceTreeClick(preferenceScreen, preference);
-
-        System.out.println("the root of the clicked preferenceScreen -----> "+ preferenceScreen.getTitle());
 
         if (preference instanceof PreferenceScreen) {
             setUpNestedScreen((PreferenceScreen) preference);
@@ -107,7 +134,7 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
             TypedValue tv = new TypedValue();
             if (getActivity().getTheme().resolveAttribute(R.attr.actionBarSize, tv, true)) {
                 height = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
-            }else{
+            } else {
                 height = toolbar.getHeight();
             }
 
@@ -118,7 +145,7 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         }
 
         toolbar.setTitle(preferenceScreen.getTitle());
-        System.out.println("the name of the clicked preferenceScreen -----> "+ preferenceScreen.getTitle());
+        System.out.println("the name of the clicked preferenceScreen -----> " + preferenceScreen.getTitle());
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,31 +157,71 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        System.out.println("In onSharedPreferenceChanged method and the key is "+key);
+        System.out.println("In onSharedPreferenceChanged method and the key is " + key);
         if (key.compareTo(KEY_DAY_GOAL) == 0) {
 /*            Integer day_goal = Integer.valueOf(sharedPreferences.getString(KEY_DAY_GOAL,""));
             System.out.println(day_goal);*/
-            ((EditTextPreference)findPreference(key)).setSummary(sharedPreferences.getString(KEY_DAY_GOAL,""));
+            ((EditTextPreference) findPreference(key)).setSummary(sharedPreferences.getString(KEY_DAY_GOAL, ""));
         }
-        else if (key.compareTo(KEY_WEEK_GOAL) == 0)
-        {
-            ((EditTextPreference)findPreference(key)).setSummary(sharedPreferences.getString(KEY_WEEK_GOAL,""));
+        if (key.compareTo(KEY_WEEK_GOAL) == 0) {
+            ((EditTextPreference) findPreference(key)).setSummary(sharedPreferences.getString(KEY_WEEK_GOAL, ""));
         }
-        else if (key.compareTo(KEY_MONTH_GOAL) == 0)
-        {
-            ((EditTextPreference)findPreference(key)).setSummary(sharedPreferences.getString(KEY_MONTH_GOAL,""));
+        if (key.compareTo(KEY_MONTH_GOAL) == 0) {
+            ((EditTextPreference) findPreference(key)).setSummary(sharedPreferences.getString(KEY_MONTH_GOAL, ""));
         }
-        else if (key.compareTo(KEY_RINGTONE_USING_STATE) == 0) {
+        if (key.compareTo(KEY_RINGTONE_USING_STATE) == 0) {
             //System.out.println(sharedPreferences.getBoolean(key,false));
-            if (sharedPreferences.getBoolean(key,false)) {
-                findPreference(KEY_RINGTONE_SETTING).setEnabled(true);
+            if (sharedPreferences.getBoolean(key, false)) {
+                mRingTone.setEnabled(true);
+            } else {
+                sharedPreferences.edit().putString(KEY_RINGTONE_SETTING, "".toString()).commit();
+                mRingTone.setSummary(getRingtoneName(Uri.parse(sharedPreferences.getString(KEY_RINGTONE_SETTING,""))));
+                mRingTone.setEnabled(false);
+            }
+        }
+        if (key.compareTo(KEY_RINGTONE_USING_STATE) == 0) {
+            System.out.println("sharedPreferenceChange-->ringtone");
+        }
+/*        RingtonePreference ringtonePreference = (RingtonePreference)findPreference(KEY_RINGTONE_SETTING);
+        ringtonePreference.setOnPreferenceChangeListener(this);*/
+    }
+
+    @Override
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
+        System.out.println("---------------------->");
+        if (preference == mRingTone) {
+            if (TextUtils.isEmpty(newValue.toString())) {
+                preference.setSummary("静音");
+                sharedPreferences.edit().putString(preference.getKey(), "").commit();
             }
             else {
-                findPreference(KEY_RINGTONE_SETTING).setEnabled(false);
+                Uri ringtoneUri = Uri.parse((String)newValue);
+                String strSummary = getRingtoneName(ringtoneUri);
+                preference.setSummary(strSummary);
+                // 此处必须加上，否则不会保存
+                sharedPreferences.edit().putString(preference.getKey(), (String)newValue).commit();
             }
+
         }
+        return false;
     }
 
 
 
+    // 获取提示音名称
+    public String getRingtoneName(Uri uri) {
+        System.out.println("in getRingtone: " + uri.toString());
+        if (uri.toString().compareTo("") == 0) {
+            return "静音";
+        }
+        else {
+            Ringtone r = RingtoneManager.getRingtone(getActivity(), uri);
+            return r.getTitle(getActivity());
+        }
+    }
+
+    @Override
+    public boolean onPreferenceClick(Preference preference) {
+        return false;
+    }
 }
