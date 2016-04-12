@@ -1,20 +1,22 @@
 package com.kevinwang.tomatoClock;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.preference.RingtonePreference;
+import android.preference.SwitchPreference;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +35,11 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
     private static final String KEY_MONTH_GOAL = "month_goal";
     private static final String KEY_RINGTONE_USING_STATE = "ringtone_using_state";
     private static final String KEY_RINGTONE_SETTING = "ringtone_setting";
+    private static final String KEY_IS_VIBRATE = "is_vibrate";
+    private static final String KEY_IS_LONG_VIBRATE = "is_long_vibrate";
     private RingtonePreference mRingTone;
+    private SwitchPreference switch_is_vibrate;
+    private SwitchPreference switch_is_long_vibrate;
 
     public static SettingFragment newInstance(Bundle bundle) {
         SettingFragment settingFragment = new SettingFragment();
@@ -55,16 +61,26 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         ((EditTextPreference) findPreference(KEY_MONTH_GOAL)).setSummary(sharedPreferences.getString(KEY_MONTH_GOAL,
                 ""));
 
-        mRingTone = (RingtonePreference)findPreference(KEY_RINGTONE_SETTING);
+        mRingTone = (RingtonePreference) findPreference(KEY_RINGTONE_SETTING);
         if (sharedPreferences.getBoolean(KEY_RINGTONE_USING_STATE, false)) {
             mRingTone.setEnabled(true);
         } else {
             sharedPreferences.edit().putString(KEY_RINGTONE_SETTING, "".toString()).commit();
             mRingTone.setEnabled(false);
         }
-        mRingTone.setSummary(getRingtoneName(Uri.parse(sharedPreferences.getString(KEY_RINGTONE_SETTING,""))));
+        mRingTone.setSummary(getRingtoneName(Uri.parse(sharedPreferences.getString(KEY_RINGTONE_SETTING, ""))));
         mRingTone.setOnPreferenceChangeListener(this);
         mRingTone.setOnPreferenceClickListener(this);
+
+        switch_is_vibrate = (SwitchPreference) findPreference(KEY_IS_VIBRATE);
+        switch_is_long_vibrate = (SwitchPreference) findPreference(KEY_IS_LONG_VIBRATE);
+        if (sharedPreferences.getBoolean(KEY_IS_VIBRATE, false)) {
+            findPreference(KEY_IS_LONG_VIBRATE).setEnabled(true);
+        } else {
+            sharedPreferences.edit().putBoolean(KEY_IS_LONG_VIBRATE, false).commit();
+            switch_is_long_vibrate.setChecked(false);
+            findPreference(KEY_IS_LONG_VIBRATE).setEnabled(false);
+        }
     }
 
     @Override
@@ -157,7 +173,8 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        System.out.println("In onSharedPreferenceChanged method and the key is " + key);
+        Vibrator vibrator = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+
         if (key.compareTo(KEY_DAY_GOAL) == 0) {
 /*            Integer day_goal = Integer.valueOf(sharedPreferences.getString(KEY_DAY_GOAL,""));
             System.out.println(day_goal);*/
@@ -175,46 +192,57 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
                 mRingTone.setEnabled(true);
             } else {
                 sharedPreferences.edit().putString(KEY_RINGTONE_SETTING, "".toString()).commit();
-                mRingTone.setSummary(getRingtoneName(Uri.parse(sharedPreferences.getString(KEY_RINGTONE_SETTING,""))));
+                mRingTone.setSummary(getRingtoneName(Uri.parse(sharedPreferences.getString(KEY_RINGTONE_SETTING, ""))));
                 mRingTone.setEnabled(false);
             }
         }
-        if (key.compareTo(KEY_RINGTONE_USING_STATE) == 0) {
-            System.out.println("sharedPreferenceChange-->ringtone");
+
+        if (key.compareTo(KEY_IS_VIBRATE) == 0) {
+            if (sharedPreferences.getBoolean(key, false)) {
+                findPreference(KEY_IS_LONG_VIBRATE).setEnabled(true);
+                vibrator.vibrate(1000);
+            } else {
+                sharedPreferences.edit().putBoolean(KEY_IS_LONG_VIBRATE, false).commit();
+                switch_is_long_vibrate.setChecked(false);
+                findPreference(KEY_IS_LONG_VIBRATE).setEnabled(false);
+            }
         }
-/*        RingtonePreference ringtonePreference = (RingtonePreference)findPreference(KEY_RINGTONE_SETTING);
-        ringtonePreference.setOnPreferenceChangeListener(this);*/
+        if (key.compareTo(KEY_IS_LONG_VIBRATE) == 0) {
+            if (sharedPreferences.getBoolean(key, false)) {
+                // The following numbers represent millisecond lengths
+                int dash = 500;     // Length of a Morse Code "dash" in milliseconds
+                int short_gap = 250;    // Length of Gap Between dots/dashes
+                long[] pattern = {
+                        0,  // Start immediately
+                        dash, short_gap, dash, short_gap, dash,
+                        short_gap, dash, short_gap, dash,short_gap,
+                        dash, short_gap, dash
+                };
+                // Only perform this pattern one time (-1 means "do not repeat")
+                vibrator.vibrate(pattern, -1);
+            }
+        }
+
     }
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         System.out.println("---------------------->");
-        if (preference == mRingTone) {
-            if (TextUtils.isEmpty(newValue.toString())) {
-                preference.setSummary("静音");
-                sharedPreferences.edit().putString(preference.getKey(), "").commit();
-            }
-            else {
-                Uri ringtoneUri = Uri.parse((String)newValue);
-                String strSummary = getRingtoneName(ringtoneUri);
-                preference.setSummary(strSummary);
-                // 此处必须加上，否则不会保存
-                sharedPreferences.edit().putString(preference.getKey(), (String)newValue).commit();
-            }
+        Uri ringtoneUri = Uri.parse((String) newValue);
+        String strSummary = getRingtoneName(ringtoneUri);
+        preference.setSummary(strSummary);
+        // 此处必须加上，否则不会保存
+        sharedPreferences.edit().putString(preference.getKey(), (String) newValue).commit();
 
-        }
         return false;
     }
 
 
-
     // 获取提示音名称
     public String getRingtoneName(Uri uri) {
-        System.out.println("in getRingtone: " + uri.toString());
         if (uri.toString().compareTo("") == 0) {
             return "静音";
-        }
-        else {
+        } else {
             Ringtone r = RingtoneManager.getRingtone(getActivity(), uri);
             return r.getTitle(getActivity());
         }
