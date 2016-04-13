@@ -29,6 +29,7 @@ import android.widget.ListView;
  */
 public class SettingFragment extends PreferenceFragment implements SharedPreferences
         .OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
+
     private SharedPreferences sharedPreferences;
     private static final String KEY_DAY_GOAL = "day_goal";
     private static final String KEY_WEEK_GOAL = "week_goal";
@@ -37,9 +38,14 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
     private static final String KEY_RINGTONE_SETTING = "ringtone_setting";
     private static final String KEY_IS_VIBRATE = "is_vibrate";
     private static final String KEY_IS_LONG_VIBRATE = "is_long_vibrate";
+    private static final String KEY_TOMATO_LENGTH = "tomato_length";
+    private static final String KEY_REST_LENGTH = "rest_length";
+    private static final String KEY_LONG_REST_LENGTH = "long_rest_length";
+    private static final String KEY_COUNT_INTERVAL = "long_rest_interval_count";
     private RingtonePreference mRingTone;
     private SwitchPreference switch_is_vibrate;
     private SwitchPreference switch_is_long_vibrate;
+
 
     public static SettingFragment newInstance(Bundle bundle) {
         SettingFragment settingFragment = new SettingFragment();
@@ -56,6 +62,12 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
+        initialPreference(sharedPreferences);
+
+        System.out.println(sharedPreferences.getInt(KEY_LONG_REST_LENGTH,1));
+    }
+
+    private void initialPreference (SharedPreferences sharedPreferences) {
         ((EditTextPreference) findPreference(KEY_DAY_GOAL)).setSummary(sharedPreferences.getString(KEY_DAY_GOAL, ""));
         ((EditTextPreference) findPreference(KEY_WEEK_GOAL)).setSummary(sharedPreferences.getString(KEY_WEEK_GOAL, ""));
         ((EditTextPreference) findPreference(KEY_MONTH_GOAL)).setSummary(sharedPreferences.getString(KEY_MONTH_GOAL,
@@ -70,7 +82,6 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         }
         mRingTone.setSummary(getRingtoneName(Uri.parse(sharedPreferences.getString(KEY_RINGTONE_SETTING, ""))));
         mRingTone.setOnPreferenceChangeListener(this);
-        mRingTone.setOnPreferenceClickListener(this);
 
         switch_is_vibrate = (SwitchPreference) findPreference(KEY_IS_VIBRATE);
         switch_is_long_vibrate = (SwitchPreference) findPreference(KEY_IS_LONG_VIBRATE);
@@ -81,6 +92,7 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
             switch_is_long_vibrate.setChecked(false);
             findPreference(KEY_IS_LONG_VIBRATE).setEnabled(false);
         }
+
     }
 
     @Override
@@ -113,15 +125,6 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         if (preference instanceof PreferenceScreen) {
             setUpNestedScreen((PreferenceScreen) preference);
         }
-/*        else if (preference instanceof  SeekBarPreference) {
-            switch(preference.getKey()) {
-                case "long_rest_interval_count":
-                    ((SeekBarPreference) preference).setSeekBarInfo("counts");
-                    break;
-                default:
-                    ((SeekBarPreference) preference).setSeekBarInfo("mins");
-            }
-        }*/
 
         return false;
     }
@@ -173,8 +176,10 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
         Vibrator vibrator = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 
+        //--------------------
         if (key.compareTo(KEY_DAY_GOAL) == 0) {
 /*            Integer day_goal = Integer.valueOf(sharedPreferences.getString(KEY_DAY_GOAL,""));
             System.out.println(day_goal);*/
@@ -186,6 +191,7 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         if (key.compareTo(KEY_MONTH_GOAL) == 0) {
             ((EditTextPreference) findPreference(key)).setSummary(sharedPreferences.getString(KEY_MONTH_GOAL, ""));
         }
+        //--------------------
         if (key.compareTo(KEY_RINGTONE_USING_STATE) == 0) {
             //System.out.println(sharedPreferences.getBoolean(key,false));
             if (sharedPreferences.getBoolean(key, false)) {
@@ -196,12 +202,13 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
                 mRingTone.setEnabled(false);
             }
         }
-
+        //--------------------
         if (key.compareTo(KEY_IS_VIBRATE) == 0) {
             if (sharedPreferences.getBoolean(key, false)) {
                 findPreference(KEY_IS_LONG_VIBRATE).setEnabled(true);
                 vibrator.vibrate(1000);
             } else {
+                vibrator.cancel();
                 sharedPreferences.edit().putBoolean(KEY_IS_LONG_VIBRATE, false).commit();
                 switch_is_long_vibrate.setChecked(false);
                 findPreference(KEY_IS_LONG_VIBRATE).setEnabled(false);
@@ -221,13 +228,18 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
                 // Only perform this pattern one time (-1 means "do not repeat")
                 vibrator.vibrate(pattern, -1);
             }
+            else {
+                vibrator.cancel();
+            }
         }
+        //--------------------
+        if (key.compareTo(KEY_TOMATO_LENGTH) == 0) {
 
+        }
     }
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        System.out.println("---------------------->");
         Uri ringtoneUri = Uri.parse((String) newValue);
         String strSummary = getRingtoneName(ringtoneUri);
         preference.setSummary(strSummary);

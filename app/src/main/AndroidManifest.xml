@@ -10,7 +10,7 @@
         android:theme="@style/StyleIndicator"
         android:label="@string/app_name"
         >
-        <activity android:name="com.kevinwang.tomatoClock.FragmentContainerActivity"
+        <activity android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.kevinwang.tomatoClock.SettingsActivity"
-            android:parentActivityName=".FragmentContainerActivity"
+            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait">
         </activity>
     </application>

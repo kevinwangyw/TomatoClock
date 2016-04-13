@@ -67,16 +67,20 @@
             android:title="@string/tomato_setting_title">
             <com.kevinwang.tomatoClock.SeekBarPreference
                 android:title="番茄时间长度"
-                android:key="tomato_length"/>
+                android:key="tomato_length"
+                android:defaultValue="25"/>
             <com.kevinwang.tomatoClock.SeekBarPreference
                 android:title="休息时间长度"
-                android:key="rest_length"/>
+                android:key="rest_length"
+                android:defaultValue="5"/>
             <com.kevinwang.tomatoClock.SeekBarPreference
                 android:title="长休息时间长度"
-                android:key="long_rest_length"/>
+                android:key="long_rest_length"
+                android:defaultValue="15"/>
             <com.kevinwang.tomatoClock.SeekBarPreference
                 android:title="长休息间隔"
                 android:key="long_rest_interval_count"
+                android:defaultValue="4"
                 />
         </PreferenceScreen>
 

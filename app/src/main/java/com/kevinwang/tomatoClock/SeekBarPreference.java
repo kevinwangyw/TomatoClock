@@ -18,7 +18,6 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
     private int mMax = 25;
     private boolean mTrackingTouch;
     private TextView val_text;
-    private OnSeekBarPrefsChangeListener mListener = null;
     private String mtype;
     private int seekbar_case;
 
@@ -26,6 +25,7 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
         super(context, attrs, defStyleAttr);
 
         this.context = context;
+
         switch (getKey()) {
             case "long_rest_interval_count":
                 setMax(6);
@@ -44,6 +44,7 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
                 seekbar_case = 15;
                 break;
         }
+
         setLayoutResource(R.layout.seekbar_preference);
     }
 
@@ -51,6 +52,7 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
         this(context, attrs, 0);
         //save a value for the setting
     }
+
 
     public SeekBarPreference(Context context) {
         this(context, null);
@@ -88,6 +90,10 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
         notifyChanged();
     }
 
+    public void set_seekbarCase (int val) {
+        seekbar_case = val;
+    }
+
     public void setMax(int max) {
         if (mMax != max) {
             mMax = max;
@@ -102,20 +108,19 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
         }
     }
 
-    public void setProgress(int progress) {
-        setProgress(progress, true);
-    }
-
     //When the system adds your Preference to the screen, it calls onSetInitialValue()
     // to notify you whether the setting has a persisted value.
     // If there is no persisted value, this call provides you the default value.
 
-
     @Override
     protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
-        setProgress(restorePersistedValue ? getPersistedInt(mProgress) : (Integer) defaultValue);
+        setProgress(restorePersistedValue ? getPersistedInt(mProgress) - seekbar_case: (Integer) defaultValue);
        /* Each getPersisted*() method takes an argument that specifies the default value
         to use in case there is actually no persisted value or the key does not exist.*/
+    }
+
+    public void setProgress(int progress) {
+        setProgress(progress, true);
     }
 
     public void setProgress(int progress, boolean notifychanged) {
@@ -127,7 +132,7 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
         }
         if (progress != mProgress) {
             mProgress = progress;
-            persistInt(progress);
+            persistInt(getProgress()); //to persist the progress into the sharedPreference
             if (notifychanged) {
                 notifyChanged();
                 //should be called when the data of this preference has been changed
@@ -139,51 +144,40 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
         return mProgress + seekbar_case;
     }
 
-    public interface OnSeekBarPrefsChangeListener {
-        public void onStopTrackingTouch(String key, SeekBar seekBar);
-
-        public void onStartTrackingTouch(String key, SeekBar seekBar);
-
-        public void onProgressChanged(String key, SeekBar seekBar, int progress, boolean fromUser);
-    }
-
     /**
      * Persist the seekBar's progress value if callChangeListener
      * returns true, otherwise set the seekBar's progress to the stored value
      */
     void syncProgress(SeekBar seekBar) {
         int progress = seekBar.getProgress();
+
         if (progress != mProgress) {
-            if (callChangeListener(progress)) {
+/*            if (callChangeListener(progress)) {
                 //Call this method callChangeListener after the user changes the preference, but before the
-                //internal state is set. This allows the client to ignore the user value.
-                setProgress(progress, false);
-                val_text.setText(String.valueOf(mProgress + seekbar_case) + " " + mtype);
-            } else {
+                //internal state is set. This allows the client to ignore the user value.*/
+            setProgress(progress, false);
+            val_text.setText(String.valueOf(mProgress + seekbar_case) + " " + mtype);
+/*            } else {
+                System.out.println("----->callChangeListener(progress) == false<------" +  getPersistedInt(0));
                 seekBar.setProgress(mProgress);
                 val_text.setText(String.valueOf(mProgress + seekbar_case) + " " + mtype);
-            }
+            }*/
         }
     }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (mListener != null) {
-            mListener.onProgressChanged(getKey(), seekBar, progress, fromUser);
-        }
         if (seekBar.getProgress() != mProgress) {
             syncProgress(seekBar);
         }
-        if (fromUser && !mTrackingTouch) {
+/*        if (fromUser && !mTrackingTouch) {
+            System.out.println("tracking touch state " + mTrackingTouch);
             syncProgress(seekBar);
-        }
+        }*/
     }
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-        if (mListener != null) {
-            mListener.onStartTrackingTouch(getKey(), seekBar);
-        }
         /**getKey() method
          * Gets the key for this Preference, which is also the key used for storing
          * values into SharedPreferences.
@@ -193,14 +187,13 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        if (mListener != null) {
-            mListener.onStopTrackingTouch(getKey(), seekBar);
-        }
         mTrackingTouch = false;
         if (seekBar.getProgress() != mProgress) {
             syncProgress(seekBar);
         }
+        System.out.println("value of progress when stop " + mProgress + " and persistInt " + getPersistedInt(0));
         notifyHierarchyChanged();
+
     }
 
     //To define how your Preference class saves its state, you should extend the Preference.BaseSavedState class.
@@ -209,6 +202,7 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
         int max;
         int progress;
         String type;
+        int val_base;
 
         public SavedState(Parcelable superState) {
             super(superState);
@@ -220,6 +214,7 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
             progress = source.readInt();
             max = source.readInt();
             type = source.readString();
+            val_base = source.readInt();
         }
 
         @Override
@@ -229,6 +224,7 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
             dest.writeInt(progress);
             dest.writeInt(max);
             dest.writeString(type);
+            dest.writeInt(val_base);
         }
 
         // Standard creator object using an instance of this class
@@ -270,6 +266,7 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
         myState.progress = mProgress;
         myState.max = mMax;
         myState.type = mtype;
+        myState.val_base = seekbar_case;
         return myState;
     }
 
@@ -288,9 +285,11 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
         mProgress = myState.progress;
         mMax = myState.max;
         mtype = myState.type;
+        seekbar_case = myState.val_base;
         notifyChanged();
 
         // Set this Preference's widget to reflect the restored state
         val_text.setText(String.valueOf(mProgress + seekbar_case) + " " + mtype);
     }
+
 }
