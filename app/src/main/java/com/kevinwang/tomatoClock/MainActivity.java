@@ -45,8 +45,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment_container);
 
+        active = true;
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         viewPager = (ViewPager) findViewById(R.id.fragmentPager);
+
+        viewPager.setAdapter(new ViewPagerAdapter(fragmentManager));
+
+        TabPageIndicator tabPageIndicator = (TabPageIndicator) findViewById(R.id.tabsTitle);
+        tabPageIndicator.setViewPager(viewPager);
+
         /* Inside the activity */
         // Sets the Toolbar to act as the ActionBar for this Activity window.
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -58,24 +66,12 @@ public class MainActivity extends AppCompatActivity {
 
         init(sharedPreferences);
 
-        countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000, 1000);
-        countDownClock.setContext(this);
-
-        clock_toolbar_text.setText(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) + " : 00");
-        System.out.println("MainActivity---->KEY_TOMATO_LENGTH : "+sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) );
-
         clock_toolbar_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
         });
-
-        viewPager.setAdapter(new ViewPagerAdapter(fragmentManager));
-
-        TabPageIndicator tabPageIndicator = (TabPageIndicator) findViewById(R.id.tabsTitle);
-        tabPageIndicator.setViewPager(viewPager);
-
 
     }
 
@@ -92,6 +88,10 @@ public class MainActivity extends AppCompatActivity {
         if (sharedPreferences.getInt(KEY_REST_LENGTH, -1) == -1) {
             sharedPreferences.edit().putInt(KEY_REST_LENGTH, 5).commit();
         }
+        countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000, 1000);
+        countDownClock.setContext(this);
+        countDownClock.setTextView(clock_toolbar_text);
+        clock_toolbar_text.setText(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) + " : 00");
     }
 
     private void initToolbar(Toolbar toolbar) {
