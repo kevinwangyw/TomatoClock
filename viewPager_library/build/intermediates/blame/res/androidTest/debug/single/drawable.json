@@ -1,10 +1,14 @@
 [
     {
-        "merged": "D:\\AndroidStudioProjects\\TomatoClock\\viewPager_library\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\vpi__tab_indicator.xml",
-        "source": "D:\\AndroidStudioProjects\\TomatoClock\\viewPager_library\\build\\intermediates\\bundles\\debug\\res\\drawable\\vpi__tab_indicator.xml"
+        "merged": "D:\\AndroidStudioProject\\TomatoClock\\viewPager_library\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\vpi__tab_indicator.xml",
+        "source": "D:\\AndroidStudioProject\\TomatoClock\\viewPager_library\\build\\intermediates\\bundles\\debug\\res\\drawable\\vpi__tab_indicator.xml"
     },
     {
         "merged": "D:\\AndroidStudioProjects\\NavigationBar1\\viewPager_library\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\vpi__tab_indicator.xml",
         "source": "D:\\AndroidStudioProjects\\NavigationBar1\\viewPager_library\\build\\intermediates\\bundles\\debug\\res\\drawable\\vpi__tab_indicator.xml"
+    },
+    {
+        "merged": "D:\\AndroidStudioProjects\\TomatoClock\\viewPager_library\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\vpi__tab_indicator.xml",
+        "source": "D:\\AndroidStudioProjects\\TomatoClock\\viewPager_library\\build\\intermediates\\bundles\\debug\\res\\drawable\\vpi__tab_indicator.xml"
     }
 ]
