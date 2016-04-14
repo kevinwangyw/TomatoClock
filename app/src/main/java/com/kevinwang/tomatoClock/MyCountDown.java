@@ -2,8 +2,6 @@ package com.kevinwang.tomatoClock;
 
 import android.content.Context;
 import android.os.CountDownTimer;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.TextView;
 
 import java.util.concurrent.TimeUnit;
@@ -14,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 public class MyCountDown extends CountDownTimer {
         private static MyCountDown instance = null;
         private Context context;
-
+        private TextView textView;
 
         /**
          * @param millisInFuture    The number of millis in the future from the call
@@ -38,12 +36,14 @@ public class MyCountDown extends CountDownTimer {
             this.context = context;
         }
 
+        public void setTextView(TextView textView) { this.textView = textView; }
+
         @Override
         public void onTick(long millisUntilFinished) {
             if (MainActivity.active) {
-                LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+/*                LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View view = inflater.inflate(R.layout.activity_fragment_container, null);
-                final TextView textView = (TextView)view.findViewById(R.id.clock_toolbar_text);
+                final TextView textView = (TextView)view.findViewById(R.id.clock_toolbar_text);*/
                 System.out.println("------> no changed " + textView.getText());
                 textView.setText(String.format("%d : %d",
                         TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
