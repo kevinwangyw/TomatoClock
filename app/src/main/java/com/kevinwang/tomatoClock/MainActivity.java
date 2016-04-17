@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String KEY_REST_LENGTH = "rest_length";
     private static final String KEY_LONG_REST_LENGTH = "long_rest_length";
     private static final String KEY_COUNT_INTERVAL = "long_rest_interval_count";
+    private static final String STATE = "state";
+    private static final String APP_CLOSE_TIME = "app_close_time";
     private static Boolean active = false;
     private static int state = 0;
 
@@ -264,10 +266,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         System.out.println("MainActivity---->onResume()");
-        active = true;
 
         switch (state % 4) {
             case 0:
+                if (state == sharedPreferences.getInt(KEY_COUNT_INTERVAL, 4) * 4) {
+                    state = 0;
+                }
                 //测试，时间除以2, 30秒
                 clock_toolbar_text.setText(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) + " : 00");
                 countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000 / 2, 1000);
@@ -280,17 +284,15 @@ public class MainActivity extends AppCompatActivity {
                 countDownClock.setContext(this);
                 break;
             case 2:
-                menu.findItem(R.id.menu_work).setIcon(R.mipmap.ic_action_tick);
                 clock_toolbar_text.setText("已完成番茄时间");
                 break;
             case 3:
-                menu.findItem(R.id.menu_work).setIcon(R.mipmap.ic_action_cancel);
                 countDownClock = MyCountDown.getInstance();
                 countDownClock.setTextView(clock_toolbar_text);
                 countDownClock.setContext(this);
                 break;
         }
-
+        active = true;
     }
 
 
@@ -298,6 +300,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         System.out.println("MainActivity---->onDestory()");
+        sharedPreferences.edit().putInt(STATE, state).commit();
         active = false;
     }
 
@@ -305,6 +308,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         System.out.println("MainActivity----->onPause()");
+        sharedPreferences.edit().putInt(STATE, state).commit();
         active = false;
     }
 
@@ -320,6 +324,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         System.out.println("MainActivity---->onStop()");
+        sharedPreferences.edit().putInt(STATE, state).commit();
         active = false;
     }
 

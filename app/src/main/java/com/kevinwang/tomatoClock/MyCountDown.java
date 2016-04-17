@@ -63,13 +63,17 @@ public class MyCountDown extends CountDownTimer {
                 final TextView textView = (TextView)view.findViewById(R.id.clock_toolbar_text);*/
             showCountDownTime(millisUntilFinished);
         }
-        if (CircleTimeFragment.getActive()) {
+        else if (CircleTimeFragment.getActive()) {
             showCountDownTime(millisUntilFinished);
+        }
+        else {
+            System.out.println("onTick()");
         }
     }
 
     private void showCountDownTime (long millisUntilFinished) {
-        System.out.println("倒计时类------>onTick() and the context is: " + context.getClass().getName());
+        //System.out.println("倒计时类------>onTick() and the context is: " + context.getClass().getName());
+
         textView.setText(String.format("%d : %d",
                 TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
 
@@ -107,7 +111,7 @@ public class MyCountDown extends CountDownTimer {
                     break;
             }
         }
-        if (CircleTimeFragment.getActive()) {
+        else if (CircleTimeFragment.getActive()) {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = layoutInflater.inflate(R.layout.fragment_circle_time, null);
             CircleTimeFragment fragment = (CircleTimeFragment) ((CircleTimeActivity)context)
@@ -127,7 +131,18 @@ public class MyCountDown extends CountDownTimer {
                     break;
             }
         }
-
+        else {
+            switch (state % 4) {
+                case 1:
+                    MainActivity.setState(++state);
+                    System.out.println("番茄倒计时完成，state：" + state);
+                    break;
+                case 3:
+                    System.out.println("休息倒计时完成，state：" + MainActivity.getState());
+                    MainActivity.setState(++state);
+                    break;
+            }
+        }
     }
 
 /*    protected Menu newMenuInstance(Context context) {

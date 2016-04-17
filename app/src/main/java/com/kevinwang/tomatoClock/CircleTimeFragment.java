@@ -52,8 +52,6 @@ public class CircleTimeFragment extends Fragment implements View.OnClickListener
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         System.out.println("CircleTimeFragment----->onCreate()");
-        countDownClock = MyCountDown.getInstance();
-        countDownClock.setContext(getActivity());
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
     }
 
@@ -67,9 +65,24 @@ public class CircleTimeFragment extends Fragment implements View.OnClickListener
         imageView = (ImageView) view.findViewById(R.id.worrking_state);
         imageView.setOnClickListener(this);
         circleProgressBar = (CircleProgressBar) view.findViewById(R.id.circle_progress);
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        System.out.println("CircleTimeFragment----->onResume()");
+        countDownClock = MyCountDown.getInstance();
+        countDownClock.setContext(getActivity());
         countDownClock.setTextView(textView);
+
         switch (MainActivity.getState() % 4) {
             case 0:
+                if (MainActivity.getState() == sharedPreferences.getInt(KEY_COUNT_INTERVAL, 4) * 4) {
+                    MainActivity.setState(0);
+                }
+                circleProgressBar.setProgress(0);
                 textView.setText(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) + " : 00");
                 //测试用
                 imageView.setImageResource(R.drawable.ic_action_playback_play);
@@ -78,21 +91,12 @@ public class CircleTimeFragment extends Fragment implements View.OnClickListener
                 imageView.setImageResource(R.drawable.ic_action_cancel);
                 break;
             case 2:
+                circleProgressBar.setProgress(circleProgressBar.getMaxProgress());
                 imageView.setImageResource(R.drawable.ic_action_tick);
                 textView.setText("已完成番茄时间");
                 break;
             case 3:
                 imageView.setImageResource(R.drawable.ic_action_cancel);
-        }
-        return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        System.out.println("CircleTimeFragment----->onResume()");
-        if (MainActivity.getState() == 2) {
-            circleProgressBar.setProgress(circleProgressBar.getMaxProgress());
         }
         active = true;
     }
@@ -121,6 +125,10 @@ public class CircleTimeFragment extends Fragment implements View.OnClickListener
             case 0:  //0:代表处在可以开始番茄时间状态
                 System.out.println("click case 0");
                 MainActivity.setState(state + 1);
+                circleProgressBar.setProgress(0);
+                countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000 / 2, 1000);
+                countDownClock.setContext(getActivity());
+                countDownClock.setTextView(textView);
                 System.out.println("开始番茄时间, state :" + state);
                 imageView.setImageResource(R.drawable.ic_action_cancel);
                 countDownClock.start();
