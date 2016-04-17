@@ -300,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        System.out.println("CircleTimeFragment----->onCreate()");
+        System.out.println("MainActivity----->onPause()");
         active = false;
     }
 

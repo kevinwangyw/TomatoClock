@@ -44,7 +44,7 @@ public class MyCountDown extends CountDownTimer {
 
     public void setContext(Context context) {
         this.context = context;
-
+        System.out.println("倒计时类------>setContext() and the context is: " + context.getClass().getName());
     }
 
     public void setTextView(TextView textView) {
@@ -69,6 +69,7 @@ public class MyCountDown extends CountDownTimer {
     }
 
     private void showCountDownTime (long millisUntilFinished) {
+        System.out.println("倒计时类------>onTick() and the context is: " + context.getClass().getName());
         textView.setText(String.format("%d : %d",
                 TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
 

@@ -16,7 +16,7 @@ public class CircleTimeActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_circle_time);
-
+        System.out.println("CircleTimeActivity----->onCreate()");
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar_circle_time);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
