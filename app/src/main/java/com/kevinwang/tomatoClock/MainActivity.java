@@ -39,8 +39,10 @@ public class MainActivity extends AppCompatActivity {
     private static final String KEY_COUNT_INTERVAL = "long_rest_interval_count";
     private static final String STATE = "state";
     private static final String APP_CLOSE_TIME = "app_close_time";
+    private static final String LEFT_TIME_WHEN_CLOSE = "left_time_when_close";
     private static Boolean active = false;
     private static int state = 0;
+    private static Boolean justStart = true;
 
 
     @Override
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         initToolbar(toolbar);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        state = sharedPreferences.getInt(STATE, 0);
         // Get access to the custom title view
         clock_toolbar_text = (TextView) toolbar.findViewById(R.id.clock_toolbar_text);
 
@@ -219,24 +222,36 @@ public class MainActivity extends AppCompatActivity {
                     case 2:  //2：代表显示番茄时间完成，标志为钩
                         System.out.println("click case 2");
                         System.out.println("提交番茄时间，state：" + state);
-                        item.setIcon(R.mipmap.ic_action_cancel);
-                        if (state == (sharedPreferences.getInt(KEY_COUNT_INTERVAL, 4) * 4 - 2)) {
-                            //测试
-                            state++;
-                            countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_LONG_REST_LENGTH, 15)  * 60 * 1000 / 4, 1000);
+                        if (justStart) {
+                            justStart = false;
+                            state = 0;
+                            clock_toolbar_text.setText(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) + " : 00");
+                            countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000 / 2, 1000);
                             countDownClock.setContext(this);
                             countDownClock.setTextView(clock_toolbar_text);
-                            countDownClock.start();
-                            System.out.println("开始长休息时间, state: " + state);
+                            item.setIcon(R.mipmap.ic_action_playback_play);
                         }
                         else {
-                            state++;
-                            System.out.println("开始短休息时间, state: " + state);
-                            countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_REST_LENGTH, 5)  * 60 * 1000 / 5, 1000);  //测试
-                            countDownClock.setContext(this);
-                            countDownClock.setTextView(clock_toolbar_text);
-                            countDownClock.start();
+                            item.setIcon(R.mipmap.ic_action_cancel);
+                            if (state == (sharedPreferences.getInt(KEY_COUNT_INTERVAL, 4) * 4 - 2)) {
+                                //测试
+                                state++;
+                                countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_LONG_REST_LENGTH, 15)  * 60 * 1000 / 4, 1000);
+                                countDownClock.setContext(this);
+                                countDownClock.setTextView(clock_toolbar_text);
+                                countDownClock.start();
+                                System.out.println("开始长休息时间, state: " + state);
+                            }
+                            else {
+                                state++;
+                                System.out.println("开始短休息时间, state: " + state);
+                                countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_REST_LENGTH, 5)  * 60 * 1000 / 5, 1000);  //测试
+                                countDownClock.setContext(this);
+                                countDownClock.setTextView(clock_toolbar_text);
+                                countDownClock.start();
+                            }
                         }
+
                         break;
                     case 3:  //3：代表处在休息时间
                         System.out.println("click case 3");
@@ -269,7 +284,11 @@ public class MainActivity extends AppCompatActivity {
 
         switch (state % 4) {
             case 0:
-                if (state == sharedPreferences.getInt(KEY_COUNT_INTERVAL, 4) * 4) {
+                if (justStart) {
+                    justStart = false;
+                    state = 0;
+                }
+                else if (state == sharedPreferences.getInt(KEY_COUNT_INTERVAL, 4) * 4) {
                     state = 0;
                 }
                 //测试，时间除以2, 30秒
@@ -279,7 +298,14 @@ public class MainActivity extends AppCompatActivity {
                 countDownClock.setContext(this);
                 break;
             case 1:
-                countDownClock = MyCountDown.getInstance();
+                if (justStart) {
+                    justStart = false;
+                    state = 0;
+                    clock_toolbar_text.setText(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) + " : 00");
+                    countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000 / 2, 1000);
+                }else {
+                    countDownClock = MyCountDown.getInstance();
+                }
                 countDownClock.setTextView(clock_toolbar_text);
                 countDownClock.setContext(this);
                 break;
@@ -287,7 +313,14 @@ public class MainActivity extends AppCompatActivity {
                 clock_toolbar_text.setText("已完成番茄时间");
                 break;
             case 3:
-                countDownClock = MyCountDown.getInstance();
+                if (justStart) {
+                    justStart = false;
+                    state = 0;
+                    clock_toolbar_text.setText(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) + " : 00");
+                    countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000 / 2, 1000);
+                }else {
+                    countDownClock = MyCountDown.getInstance();
+                }
                 countDownClock.setTextView(clock_toolbar_text);
                 countDownClock.setContext(this);
                 break;
@@ -350,6 +383,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static void setState(int state) {
         MainActivity.state = state;
+
     }
     public static Boolean getActive() {
         return active;
