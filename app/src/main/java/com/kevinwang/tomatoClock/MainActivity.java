@@ -116,8 +116,10 @@ public class MainActivity extends AppCompatActivity {
                 menu.findItem(R.id.menu_work).setIcon(R.mipmap.ic_action_cancel);
                 break;
             case 2:
+                menu.findItem(R.id.menu_work).setIcon(R.mipmap.ic_action_tick);
                 break;
             case 3:
+                menu.findItem(R.id.menu_work).setIcon(R.mipmap.ic_action_cancel);
                 break;
         }
         return true;
@@ -135,16 +137,6 @@ public class MainActivity extends AppCompatActivity {
             case 3:
                 System.out.println("state : " + state);
                 menu.findItem(R.id.menu_work).setIcon(R.mipmap.ic_action_playback_play);
-                countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000 / 2, 1000);  //测试
-                clock_toolbar_text.setText(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) + " : 00");
-                countDownClock.setContext(this);
-                countDownClock.setTextView(clock_toolbar_text);
-                if (state == (sharedPreferences.getInt(KEY_COUNT_INTERVAL, 4) * 4 - 1)) {
-                    state = 0;
-                }
-                else {
-                    state++;
-                }
                 break;
         }
         return true;
@@ -153,6 +145,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void invalidateOptionsMenu() {
         System.out.println("MainActivity----> invalidateOptionsMenu()");
+        if (state % 4 == 3) {
+            countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000 / 2, 1000);  //测试
+            clock_toolbar_text.setText(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) + " : 00");
+            countDownClock.setContext(this);
+            countDownClock.setTextView(clock_toolbar_text);
+            if (state == (sharedPreferences.getInt(KEY_COUNT_INTERVAL, 4) * 4 - 1)) {
+                state = 0;
+            }
+            else {
+                state++;
+            }
+        }
         super.invalidateOptionsMenu();
     }
 
@@ -317,6 +321,26 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         System.out.println("MainActivity---->onStop()");
         active = false;
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        System.out.println("MainActivity---->onRestart()");
+        switch (state % 4) {
+            case 0:
+                menu.findItem(R.id.menu_work).setIcon(R.mipmap.ic_action_playback_play);
+                break;
+            case 1:
+                menu.findItem(R.id.menu_work).setIcon(R.mipmap.ic_action_cancel);
+                break;
+            case 2:
+                menu.findItem(R.id.menu_work).setIcon(R.mipmap.ic_action_tick);
+                break;
+            case 3:
+                menu.findItem(R.id.menu_work).setIcon(R.mipmap.ic_action_cancel);
+                break;
+        }
     }
 
     public static void setState(int state) {

@@ -117,13 +117,13 @@ public class MyCountDown extends CountDownTimer {
                 case 1:
                     MainActivity.setState(++state);
                     System.out.println("番茄倒计时完成，state：" + state);
-                    fragment.updateView();
+                    fragment.updateViewForOnFinish();
                     textView.setText("已完成番茄时间");
                     ((ImageView)view.findViewById(R.id.worrking_state)).setImageResource(R.drawable.ic_action_tick);
                     break;
                 case 3:
                     System.out.println("休息倒计时完成，state：" + MainActivity.getState());
-                    fragment.updateView();
+                    fragment.updateViewForOnFinish();
                     break;
             }
         }

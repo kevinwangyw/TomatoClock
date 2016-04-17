@@ -53,7 +53,7 @@ public class CircleTimeFragment extends Fragment implements View.OnClickListener
         super.onCreate(savedInstanceState);
         System.out.println("CircleTimeFragment----->onCreate()");
         countDownClock = MyCountDown.getInstance();
-        countDownClock.setContext(getContext());
+        countDownClock.setContext(getActivity());
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
     }
 
@@ -188,7 +188,7 @@ public class CircleTimeFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    public void updateView() {
+    public void updateViewForOnFinish() {
         int state = MainActivity.getState();
         switch (state % 4) {
             case 2:
@@ -207,6 +207,7 @@ public class CircleTimeFragment extends Fragment implements View.OnClickListener
                 System.out.println("休息倒计时结束，此时的progress是："
                         + circleProgressBar.getProgress() + " , 是否等于maxProgress: "
                         + (circleProgressBar.getProgress()==circleProgressBar.getMaxProgress()));
+                circleProgressBar.setProgress(circleProgressBar.getMaxProgress());
                 circleProgressBar.setProgress(0);
                 if (state == (sharedPreferences.getInt(KEY_COUNT_INTERVAL, 4) * 4 - 1)) {
                     state = 0;

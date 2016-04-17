@@ -12,7 +12,7 @@ import android.view.View;
  * Created by lenovo on 2016/4/15.
  */
 public class CircleProgressBar extends View{
-    private int maxProgress = 10;
+    private int maxProgress = 30;
     private int progress;
     private int progressStrokeWidth = 8;  //绘制图形线宽
     private Context context;
