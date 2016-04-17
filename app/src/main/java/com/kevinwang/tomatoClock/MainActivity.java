@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
     private long restTimeSpan;
     private long longRestTimeSpan;
     private SharedPreferences sharedPreferences;
+    private static Menu menu;
 
-    private static int tomatoCount;
     private static final String KEY_RINGTONE_USING_STATE = "ringtone_using_state";
     private static final String KEY_RINGTONE_SETTING = "ringtone_setting";
     private static final String KEY_IS_VIBRATE = "is_vibrate";
@@ -45,10 +45,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment_container);
-
+        System.out.println("MainActivity---->onCreate()");
         active = true;
-        //测试用
-        state = 0;
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         viewPager = (ViewPager) findViewById(R.id.fragmentPager);
@@ -72,7 +70,8 @@ public class MainActivity extends AppCompatActivity {
         clock_toolbar_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent i = new Intent(MainActivity.this, CircleTimeActivity.class);
+                startActivity(i);
             }
         });
 
@@ -92,9 +91,7 @@ public class MainActivity extends AppCompatActivity {
         if (sharedPreferences.getInt(KEY_REST_LENGTH, -1) == -1) {
             sharedPreferences.edit().putInt(KEY_REST_LENGTH, 1).commit();
         }
-        //测试，时间除以2, 30秒
-        setCountDownTime(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000 / 2, 1000);
-        clock_toolbar_text.setText(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) + " : 00");
+
     }
 
     private void initToolbar(Toolbar toolbar) {
@@ -108,33 +105,40 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        System.out.println("MainActivity---->onCreateOptionsMenu(Menu menu)");
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        this.menu = menu;
         switch (state % 4) {
             case 0:
                 menu.findItem(R.id.menu_work).setIcon(R.mipmap.ic_action_playback_play);
                 break;
             case 1:
+                menu.findItem(R.id.menu_work).setIcon(R.mipmap.ic_action_cancel);
                 break;
             case 2:
                 break;
             case 3:
                 break;
         }
-
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        System.out.println("MainActivity----> onPrepareOptionsMenu(Menu menu)");
         switch (state % 4) {
             case 2:
+                System.out.println("state : " + state);
                 clock_toolbar_text.setText("已完成番茄时间");
                 menu.findItem(R.id.menu_work).setIcon(R.mipmap.ic_action_tick);
                 break;
             case 3:
+                System.out.println("state : " + state);
                 menu.findItem(R.id.menu_work).setIcon(R.mipmap.ic_action_playback_play);
-                setCountDownTime(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000 / 2, 1000);  //测试
+                countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000 / 2, 1000);  //测试
                 clock_toolbar_text.setText(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) + " : 00");
+                countDownClock.setContext(this);
+                countDownClock.setTextView(clock_toolbar_text);
                 if (state == (sharedPreferences.getInt(KEY_COUNT_INTERVAL, 4) * 4 - 1)) {
                     state = 0;
                 }
@@ -148,11 +152,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void invalidateOptionsMenu() {
+        System.out.println("MainActivity----> invalidateOptionsMenu()");
         super.invalidateOptionsMenu();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        System.out.println("MainActivity----> onOptionsItemSelected(MenuItem item)");
         switch (item.getItemId()) {
             case R.id.menu_settings:
                 View menuItemView = findViewById(R.id.menu_settings);
@@ -211,14 +217,18 @@ public class MainActivity extends AppCompatActivity {
                         if (state == (sharedPreferences.getInt(KEY_COUNT_INTERVAL, 4) * 4 - 2)) {
                             //测试
                             state++;
-                            setCountDownTime(sharedPreferences.getInt(KEY_LONG_REST_LENGTH, 15)  * 60 * 1000 / 4, 1000);
+                            countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_LONG_REST_LENGTH, 15)  * 60 * 1000 / 4, 1000);
+                            countDownClock.setContext(this);
+                            countDownClock.setTextView(clock_toolbar_text);
                             countDownClock.start();
                             System.out.println("开始长休息时间, state: " + state);
                         }
                         else {
                             state++;
                             System.out.println("开始短休息时间, state: " + state);
-                            setCountDownTime(sharedPreferences.getInt(KEY_REST_LENGTH, 5)  * 60 * 1000 / 5, 1000);  //测试
+                            countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_REST_LENGTH, 5)  * 60 * 1000 / 5, 1000);  //测试
+                            countDownClock.setContext(this);
+                            countDownClock.setTextView(clock_toolbar_text);
                             countDownClock.start();
                         }
                         break;
@@ -226,7 +236,9 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println("click case 3");
                         countDownClock.cancel();
                         clock_toolbar_text.setText(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) + " : 00");
-                        setCountDownTime(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000 / 2, 1000);  //测试
+                        countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000 / 2, 1000);  //测试
+                        countDownClock.setContext(this);
+                        countDownClock.setTextView(clock_toolbar_text);
                         if (state == (sharedPreferences.getInt(KEY_COUNT_INTERVAL, 4) * 4 - 1)) {
                             state = 0;
                         }
@@ -244,20 +256,36 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setCountDownTime(long millisInFuture, long countDownInterval) {
-        countDownClock = MyCountDown.getInstance(millisInFuture, countDownInterval);
-        countDownClock.setContext(this);
-        countDownClock.setTextView(clock_toolbar_text);
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
+        System.out.println("MainActivity---->onResume()");
         active = true;
-        if (state % 4 == 0) {
-            clock_toolbar_text.setText(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) + " : 00");
-        }
 
+        switch (state % 4) {
+            case 0:
+                //测试，时间除以2, 30秒
+                clock_toolbar_text.setText(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) + " : 00");
+                countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000 / 2, 1000);
+                countDownClock.setTextView(clock_toolbar_text);
+                countDownClock.setContext(this);
+                break;
+            case 1:
+                countDownClock = MyCountDown.getInstance();
+                countDownClock.setTextView(clock_toolbar_text);
+                countDownClock.setContext(this);
+                break;
+            case 2:
+                menu.findItem(R.id.menu_work).setIcon(R.mipmap.ic_action_tick);
+                clock_toolbar_text.setText("已完成番茄时间");
+                break;
+            case 3:
+                menu.findItem(R.id.menu_work).setIcon(R.mipmap.ic_action_cancel);
+                countDownClock = MyCountDown.getInstance();
+                countDownClock.setTextView(clock_toolbar_text);
+                countDownClock.setContext(this);
+                break;
+        }
 
     }
 
@@ -265,13 +293,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        System.out.println("MainActivity---->onDestory()");
         active = false;
-        tomatoCount = 0;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        System.out.println("CircleTimeFragment----->onCreate()");
+        active = false;
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        System.out.println("MainActivity---->onStart()");
         active = true;
     }
 
@@ -279,12 +315,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        System.out.println("MainActivity---->onStop()");
         active = false;
     }
 
     public static void setState(int state) {
         MainActivity.state = state;
-
     }
     public static Boolean getActive() {
         return active;

@@ -1,26 +1,26 @@
 [
     {
-        "merged": "D:\\AndroidStudioProjects\\NavigationBar1\\viewPager_library\\build\\intermediates\\res\\merged\\androidTest\\debug\\color\\vpi__light_theme.xml",
-        "source": "D:\\AndroidStudioProjects\\NavigationBar1\\viewPager_library\\build\\intermediates\\bundles\\debug\\res\\color\\vpi__light_theme.xml"
-    },
-    {
-        "merged": "D:\\AndroidStudioProject\\TomatoClock\\viewPager_library\\build\\intermediates\\res\\merged\\androidTest\\debug\\color\\vpi__light_theme.xml",
-        "source": "D:\\AndroidStudioProject\\TomatoClock\\viewPager_library\\build\\intermediates\\bundles\\debug\\res\\color\\vpi__light_theme.xml"
-    },
-    {
         "merged": "D:\\AndroidStudioProjects\\NavigationBar1\\viewPager_library\\build\\intermediates\\res\\merged\\androidTest\\debug\\color\\vpi__dark_theme.xml",
         "source": "D:\\AndroidStudioProjects\\NavigationBar1\\viewPager_library\\build\\intermediates\\bundles\\debug\\res\\color\\vpi__dark_theme.xml"
     },
     {
-        "merged": "D:\\AndroidStudioProjects\\TomatoClock\\viewPager_library\\build\\intermediates\\res\\merged\\androidTest\\debug\\color\\vpi__dark_theme.xml",
-        "source": "D:\\AndroidStudioProjects\\TomatoClock\\viewPager_library\\build\\intermediates\\bundles\\debug\\res\\color\\vpi__dark_theme.xml"
+        "merged": "D:\\AndroidStudioProjects\\NavigationBar1\\viewPager_library\\build\\intermediates\\res\\merged\\androidTest\\debug\\color\\vpi__light_theme.xml",
+        "source": "D:\\AndroidStudioProjects\\NavigationBar1\\viewPager_library\\build\\intermediates\\bundles\\debug\\res\\color\\vpi__light_theme.xml"
     },
     {
         "merged": "D:\\AndroidStudioProjects\\TomatoClock\\viewPager_library\\build\\intermediates\\res\\merged\\androidTest\\debug\\color\\vpi__light_theme.xml",
         "source": "D:\\AndroidStudioProjects\\TomatoClock\\viewPager_library\\build\\intermediates\\bundles\\debug\\res\\color\\vpi__light_theme.xml"
     },
     {
+        "merged": "D:\\AndroidStudioProject\\TomatoClock\\viewPager_library\\build\\intermediates\\res\\merged\\androidTest\\debug\\color\\vpi__light_theme.xml",
+        "source": "D:\\AndroidStudioProject\\TomatoClock\\viewPager_library\\build\\intermediates\\bundles\\debug\\res\\color\\vpi__light_theme.xml"
+    },
+    {
         "merged": "D:\\AndroidStudioProject\\TomatoClock\\viewPager_library\\build\\intermediates\\res\\merged\\androidTest\\debug\\color\\vpi__dark_theme.xml",
         "source": "D:\\AndroidStudioProject\\TomatoClock\\viewPager_library\\build\\intermediates\\bundles\\debug\\res\\color\\vpi__dark_theme.xml"
+    },
+    {
+        "merged": "D:\\AndroidStudioProjects\\TomatoClock\\viewPager_library\\build\\intermediates\\res\\merged\\androidTest\\debug\\color\\vpi__dark_theme.xml",
+        "source": "D:\\AndroidStudioProjects\\TomatoClock\\viewPager_library\\build\\intermediates\\bundles\\debug\\res\\color\\vpi__dark_theme.xml"
     }
 ]

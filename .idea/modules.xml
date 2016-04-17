@@ -3,10 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/TomatoClock.iml" filepath="$PROJECT_DIR$/TomatoClock.iml" />
-      <module fileurl="file://$PROJECT_DIR$/TomatoClock.iml" filepath="$PROJECT_DIR$/TomatoClock.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/viewPager_library/viewPager_library.iml" filepath="$PROJECT_DIR$/viewPager_library/viewPager_library.iml" />
       <module fileurl="file://$PROJECT_DIR$/viewPager_library/viewPager_library.iml" filepath="$PROJECT_DIR$/viewPager_library/viewPager_library.iml" />
     </modules>
   </component>

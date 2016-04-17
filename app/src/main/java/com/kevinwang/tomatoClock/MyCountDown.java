@@ -2,12 +2,12 @@ package com.kevinwang.tomatoClock;
 
 import android.content.Context;
 import android.os.CountDownTimer;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.lang.reflect.Constructor;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -38,8 +38,13 @@ public class MyCountDown extends CountDownTimer {
         return instance;
     }
 
+    public static MyCountDown getInstance() {
+        return instance;
+    }
+
     public void setContext(Context context) {
         this.context = context;
+
     }
 
     public void setTextView(TextView textView) {
@@ -56,42 +61,75 @@ public class MyCountDown extends CountDownTimer {
 /*                LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View view = inflater.inflate(R.layout.activity_fragment_container, null);
                 final TextView textView = (TextView)view.findViewById(R.id.clock_toolbar_text);*/
-            textView.setText(String.format("%d : %d",
-                    TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
+            showCountDownTime(millisUntilFinished);
+        }
+        if (CircleTimeFragment.getActive()) {
+            showCountDownTime(millisUntilFinished);
+        }
+    }
 
-                    TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))
-            ));
+    private void showCountDownTime (long millisUntilFinished) {
+        textView.setText(String.format("%d : %d",
+                TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
+
+                TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))
+        ));
+        if (CircleTimeFragment.getActive()) {
+            CircleTimeFragment fragment = (CircleTimeFragment) ((CircleTimeActivity)context)
+                    .getSupportFragmentManager().findFragmentByTag("circle_fragment");
+            fragment.setCircleProgress(millisUntilFinished);
         }
     }
 
 
     @Override
     public void onFinish() {
-        Menu menu = newMenuInstance(context);
+/*        Menu menu = newMenuInstance(context);
         MenuInflater menuInflater = new MenuInflater(context);
-        menuInflater.inflate(R.menu.menu_main, menu);
+        menuInflater.inflate(R.menu.menu_main, menu);*/
         int state = MainActivity.getState();
+        System.out.println("state : " + state);
         if (MainActivity.getActive()) {
             switch (state % 4) {
                 case 1:
                     MainActivity.setState(++state);
                     System.out.println("番茄倒计时完成，state：" + state);
-                    ((MainActivity)context).onPrepareOptionsMenu(menu);
+                    //((MainActivity)context).onPrepareOptionsMenu(menu);
                     ((MainActivity)context).invalidateOptionsMenu();
 
                     break;
                 case 3:
-                    ((MainActivity)context).onPrepareOptionsMenu(menu);
+                    //((MainActivity)context).onPrepareOptionsMenu(menu);
                     ((MainActivity)context).invalidateOptionsMenu();
                     System.out.println("休息倒计时完成，state：" + MainActivity.getState());
+                    break;
+            }
+        }
+        if (CircleTimeFragment.getActive()) {
+            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = layoutInflater.inflate(R.layout.fragment_circle_time, null);
+            CircleTimeFragment fragment = (CircleTimeFragment) ((CircleTimeActivity)context)
+                    .getSupportFragmentManager().findFragmentByTag("circle_fragment");
+            fragment.setCircleProgress(0);
+            switch (state % 4) {
+                case 1:
+                    MainActivity.setState(++state);
+                    System.out.println("番茄倒计时完成，state：" + state);
+                    fragment.updateView();
+                    textView.setText("已完成番茄时间");
+                    ((ImageView)view.findViewById(R.id.worrking_state)).setImageResource(R.drawable.ic_action_tick);
+                    break;
+                case 3:
+                    System.out.println("休息倒计时完成，state：" + MainActivity.getState());
+                    fragment.updateView();
                     break;
             }
         }
 
     }
 
-    protected Menu newMenuInstance(Context context) {
+/*    protected Menu newMenuInstance(Context context) {
         try {
             Class<?> menuBuilderClass = Class.forName("com.android.internal.view.menu.MenuBuilder");
 
@@ -104,7 +142,7 @@ public class MyCountDown extends CountDownTimer {
         }
 
         return null;
-    }
+    }*/
 }
 //┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
