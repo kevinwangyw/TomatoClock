@@ -2,15 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
-
+              android:layout_height="wrap_content">
     <LinearLayout
+        android:id="@+id/checkbox_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp"
-        android:gravity="center">
+        android:layout_weight="1.5"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:layout_gravity="center_vertical">
         <CheckBox
             android:id="@+id/task_checkbox"
             android:layout_width="wrap_content"
@@ -18,15 +18,13 @@
             />
     </LinearLayout>
 
-
     <TextView
         android:id="@+id/task_content_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="5"
-        android:text="123"
         android:gravity="center"
-        android:textSize="15sp"
+        android:textSize="20sp"
         android:paddingTop="12dp"
         android:paddingBottom="12dp"/>
 
@@ -35,9 +33,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp"
-        android:gravity="center"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:layout_gravity="center_vertical"
         android:src="@android:drawable/ic_menu_delete"/>
 
 </LinearLayout>

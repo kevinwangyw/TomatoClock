@@ -1,34 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true"
-    android:background="#BFBFBF"
-    android:id="@+id/task_layout_parent">
+                android:id="@+id/task_layout_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#BFBFBF"
+                android:descendantFocusability="beforeDescendants"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical">
 
     <EditText
         android:id="@+id/taskEdit"
-        android:background="@android:color/background_light"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@android:color/background_light"
+        android:enabled="true"
         android:hint="@string/input_task_hint"
-        android:textSize="20sp"
-        android:paddingTop="6dp"
         android:paddingBottom="6dp"
         android:paddingLeft="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:enabled="true"
+        android:paddingTop="6dp"
+        android:textSize="20sp"
         />
 
-    <ListView
-        android:id="@android:id/list"
-        android:background="@android:color/background_light"
+    <LinearLayout
+        android:layout_below="@id/taskEdit"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/taskEdit">
-    </ListView>
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="#c1c1c1"
+            android:dividerHeight="1dp"
+            android:background="@android:color/background_light"
+            android:paddingTop="6dp">
+        </ListView>
+    </LinearLayout>
+
 
 </RelativeLayout>

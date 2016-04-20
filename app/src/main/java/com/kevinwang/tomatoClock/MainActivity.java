@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private long restTimeSpan;
     private long longRestTimeSpan;
     private SharedPreferences sharedPreferences;
+
     private static Menu menu;
 
     private static final String KEY_RINGTONE_USING_STATE = "ringtone_using_state";

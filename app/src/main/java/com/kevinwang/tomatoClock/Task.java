@@ -11,7 +11,7 @@ import java.util.UUID;
 public class Task {
 
     private UUID mId;
-    private String mTitle;
+    private String mContent;
     private boolean mFinished;
 
     private static final String JSON_ID = "id";
@@ -20,11 +20,12 @@ public class Task {
 
     public Task () {
         mId = UUID.randomUUID();
+        mFinished = false;
     }
 
     public Task (JSONObject json) throws JSONException {
         mId = UUID.fromString(json.getString(JSON_ID));
-        mTitle = json.getString(JSON_TITLE);
+        mContent = json.getString(JSON_TITLE);
         mFinished = json.getBoolean(JSON_FINISH);
     }
 
@@ -40,23 +41,23 @@ public class Task {
         this.mFinished = mfinished;
     }
 
-    public String getTitle() {
-        return mTitle;
+    public String getContent() {
+        return mContent;
     }
 
-    public void setTitle(String mTitle) {
-        this.mTitle = mTitle;
+    public void setContent(String mTitle) {
+        this.mContent = mTitle;
     }
 
     @Override
     public String toString() {
-        return mTitle;
+        return mContent;
     }
 
     public JSONObject toJSON() throws JSONException {
         JSONObject json = new JSONObject();
         json.put(JSON_ID,mId.toString());
-        json.put(JSON_TITLE,mTitle);
+        json.put(JSON_TITLE, mContent);
         json.put(JSON_FINISH,mFinished);
         return json;
     }

@@ -38,8 +38,13 @@ public class TaskLab {
         return mTasks;
     }
 
-    public void addCrime(Task task) {
+    public void addTask(Task task) {
         mTasks.add(task);
+        System.out.println("当前任务数：" + mTasks.size());
+    }
+
+    public void addTask(int position, Task task) {
+        mTasks.add(position, task);
         System.out.println("当前任务数：" + mTasks.size());
     }
 
