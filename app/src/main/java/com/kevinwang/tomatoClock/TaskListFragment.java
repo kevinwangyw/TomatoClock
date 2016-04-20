@@ -213,6 +213,9 @@ public class TaskListFragment extends ListFragment{
                     if (isChecked) {
                         task.setFinished(true);
                     }
+                    else {
+                        task.setFinished(false);
+                    }
                 }
             });
 
