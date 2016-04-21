@@ -12,9 +12,9 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_setting_container);
+        setContentView(R.layout.fragment_not_main_container);
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar_setting_root);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar_not_main);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -26,7 +26,7 @@ public class SettingsActivity extends AppCompatActivity {
         });*/
 
         android.app.FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().add(R.id.setting_fragment_container,SettingFragment.newInstance(savedInstanceState)).commit();
+        fragmentManager.beginTransaction().add(R.id.not_main_fragment_container,SettingFragment.newInstance(savedInstanceState)).commit();
     }
 
 }

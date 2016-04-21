@@ -308,10 +308,11 @@ public class TaskListFragment extends ListFragment{
                                 //taskEditText.clearFocus();
                                 String task_content = dialogTaskEdit.getText().toString().trim();
                                 if (task_content.length() > 0) {
-                                    Task task = new Task();
-                                    task.setContent(task_content);
-                                    TaskLab.get(getActivity()).addTask(task);
+                                    mTasks.get(dragPosition).setContent(task_content);
                                     adapter.notifyDataSetChanged();
+                                }
+                                else {
+                                    mTasks.remove(mTasks.get(dragPosition));
                                 }
                             }
                         }).create();

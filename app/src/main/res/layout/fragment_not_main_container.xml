@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_setting_root"
+        android:id="@+id/toolbar_not_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#404040"
@@ -17,10 +17,10 @@
     </android.support.v7.widget.Toolbar>
 
     <FrameLayout
-        android:id="@+id/setting_fragment_container"
+        android:id="@+id/not_main_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar_setting_root">
+        android:layout_below="@id/toolbar_not_main">
 
     </FrameLayout>
 

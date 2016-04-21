@@ -67,7 +67,7 @@ public class MyCountDown extends CountDownTimer {
             showCountDownTime(millisUntilFinished);
         }
         else {
-            System.out.println("onTick()");
+            //System.out.println("onTick()");
         }
     }
 
