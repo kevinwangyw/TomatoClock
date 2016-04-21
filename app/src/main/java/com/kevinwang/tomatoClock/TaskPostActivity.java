@@ -1,5 +1,6 @@
 package com.kevinwang.tomatoClock;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -49,13 +50,22 @@ public class TaskPostActivity extends AppCompatActivity{
             if (MainActivity.getJustStart()) {
                 System.out.println("TaskPostFragment-------->onOptionsItemSelected : justStart = " + MainActivity.getJustStart());
                 MainActivity.setState(0);
+               // MainActivity.setJustStart(false);
                 MainActivity.setJustStart(false);
                 finish();
             }
             else {
                 MainActivity.setState(MainActivity.getState() + 1);
                 MyCountDown.getInstance().start();
-                MainActivity.setActive(true);
+               // MainActivity.setActive(true);
+                Intent intent = getIntent();
+                int lastActivity = intent.getIntExtra("lastActivity", 0);
+                if (lastActivity == 0) {
+                    MainActivity.setActive(true);
+                }
+                if (lastActivity == 1) {
+                    CircleTimeFragment.setActive(true);
+                }
                 finish();
             }
             //startActivity(intent);

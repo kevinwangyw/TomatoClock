@@ -232,8 +232,7 @@ public class MainActivity extends AppCompatActivity {
                     case 2:  //2：代表显示番茄时间完成，标志为钩
                         System.out.println("click case 2");
                         System.out.println("提交番茄时间，state：" + state);
-                        Intent intent = new Intent(this, TaskPostActivity.class);
-                        startActivity(intent);
+
                         if (justStart) {
 /*                            justStart = false;
                             state = 0;
@@ -262,6 +261,9 @@ public class MainActivity extends AppCompatActivity {
 /*                            state++;
                             countDownClock.start();*/
                         }
+                        Intent intent = new Intent(this, TaskPostActivity.class);
+                        intent.putExtra("lastActivity", 0);
+                        startActivity(intent);
                         break;
                     case 3:  //3：代表处在休息时间
                         System.out.println("click case 3");

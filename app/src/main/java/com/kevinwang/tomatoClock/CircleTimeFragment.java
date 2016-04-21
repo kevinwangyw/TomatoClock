@@ -1,6 +1,7 @@
 package com.kevinwang.tomatoClock;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -124,6 +125,7 @@ public class CircleTimeFragment extends Fragment implements View.OnClickListener
             //当state == count * 4 - 1 - 1的时候，休息时间设置为长休息时间
             case 0:  //0:代表处在可以开始番茄时间状态
                 System.out.println("click case 0");
+
                 MainActivity.setState(state + 1);
                 circleProgressBar.setProgress(0);
                 countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000 / 2, 1000);
@@ -157,24 +159,32 @@ public class CircleTimeFragment extends Fragment implements View.OnClickListener
                 circleProgressBar.setProgress(0);
                 System.out.println("click case 2");
                 System.out.println("提交番茄时间，state：" + state);
-                imageView.setImageResource(R.drawable.ic_action_cancel);
-                if (state == (sharedPreferences.getInt(KEY_COUNT_INTERVAL, 4) * 4 - 2)) {
-                    //测试
-                    MainActivity.setState(state + 1);
-                    countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_LONG_REST_LENGTH, 15)  * 60 * 1000 / 4, 1000);
-                    countDownClock.setContext(getActivity());
-                    countDownClock.setTextView(textView);
-                    countDownClock.start();
-                    System.out.println("开始长休息时间, state: " + state);
+                //imageView.setImageResource(R.drawable.ic_action_cancel);
+                if (MainActivity.getJustStart()) {
+
                 }
                 else {
-                    MainActivity.setState(state + 1);
-                    System.out.println("开始短休息时间, state: " + state);
-                    countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_REST_LENGTH, 5)  * 60 * 1000 / 5, 1000);  //测试
-                    countDownClock.setContext(getActivity());
-                    countDownClock.setTextView(textView);
-                    countDownClock.start();
+                    if (state == (sharedPreferences.getInt(KEY_COUNT_INTERVAL, 4) * 4 - 2)) {
+                        //测试
+                       // MainActivity.setState(state + 1);
+                        countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_LONG_REST_LENGTH, 15)  * 60 * 1000 / 4, 1000);
+                        countDownClock.setContext(getActivity());
+                        countDownClock.setTextView(textView);
+                        //countDownClock.start();
+                        //System.out.println("开始长休息时间, state: " + state);
+                    }
+                    else {
+                       // MainActivity.setState(state + 1);
+                        //System.out.println("开始短休息时间, state: " + state);
+                        countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_REST_LENGTH, 5)  * 60 * 1000 / 5, 1000);  //测试
+                        countDownClock.setContext(getActivity());
+                        countDownClock.setTextView(textView);
+                        //countDownClock.start();
+                    }
                 }
+                Intent intent = new Intent(getActivity(), TaskPostActivity.class);
+                intent.putExtra("lastActivity", 1);
+                startActivity(intent);
                 break;
             case 3:  //3：代表处在休息时间
                 System.out.println("click case 3");
