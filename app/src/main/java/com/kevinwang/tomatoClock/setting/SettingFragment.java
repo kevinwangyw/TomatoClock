@@ -1,4 +1,4 @@
-package com.kevinwang.tomatoClock;
+package com.kevinwang.tomatoClock.setting;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -23,6 +23,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+
+import com.kevinwang.tomatoClock.R;
 
 /**
  * Created by lenovo on 2016/4/9.

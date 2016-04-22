@@ -5,6 +5,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.kevinwang.tomatoClock.Task.TaskListFragment;
+import com.kevinwang.tomatoClock.history.TaskHistoryFragment;
+
 /**
  * Created by lenovo on 2016/4/7.
  */

@@ -1,4 +1,4 @@
-package com.kevinwang.tomatoClock;
+package com.kevinwang.tomatoClock.Task;
 
 import android.app.Activity;
 import android.content.Context;
@@ -27,6 +27,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.kevinwang.tomatoClock.R;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.kevinwang.tomatoClock;
+package com.kevinwang.tomatoClock.Task;
 
 import org.json.JSONException;
 import org.json.JSONObject;

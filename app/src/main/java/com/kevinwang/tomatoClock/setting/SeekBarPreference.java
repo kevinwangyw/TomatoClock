@@ -1,4 +1,4 @@
-package com.kevinwang.tomatoClock;
+package com.kevinwang.tomatoClock.setting;
 
 import android.content.Context;
 import android.os.Parcel;
@@ -8,6 +8,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import com.kevinwang.tomatoClock.R;
 
 /**
  * Created by ywwang on 2016/4/10.

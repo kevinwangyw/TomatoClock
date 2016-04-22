@@ -1,4 +1,4 @@
-package com.kevinwang.tomatoClock;
+package com.kevinwang.tomatoClock.history;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.kevinwang.tomatoClock.CircleTimeFragment;
+import com.kevinwang.tomatoClock.MainActivity;
+import com.kevinwang.tomatoClock.MyCountDown;
+import com.kevinwang.tomatoClock.R;
 
 /**
  * Created by lenovo on 2016/4/21.

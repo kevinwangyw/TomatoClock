@@ -16,6 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.kevinwang.tomatoClock.history.TaskPostActivity;
+import com.kevinwang.tomatoClock.setting.SettingsActivity;
 import com.viewpagerindicator.TabPageIndicator;
 
 public class MainActivity extends AppCompatActivity {

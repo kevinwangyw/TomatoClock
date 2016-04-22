@@ -1,9 +1,11 @@
-package com.kevinwang.tomatoClock;
+package com.kevinwang.tomatoClock.setting;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+
+import com.kevinwang.tomatoClock.R;
 
 /**
  * Created by lenovo on 2016/4/9.

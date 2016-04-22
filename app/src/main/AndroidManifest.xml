@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.kevinwang.tomatoClock.SettingsActivity"
+            android:name=".setting.SettingsActivity"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait">
         </activity>
@@ -33,7 +33,7 @@
             android:screenOrientation="portrait">
         </activity>
 
-        <activity android:name=".TaskPostActivity"
+        <activity android:name=".history.TaskPostActivity"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait">
 

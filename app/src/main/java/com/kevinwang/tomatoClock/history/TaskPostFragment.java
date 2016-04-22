@@ -1,4 +1,4 @@
-package com.kevinwang.tomatoClock;
+package com.kevinwang.tomatoClock.history;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,6 +18,10 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.kevinwang.tomatoClock.R;
+import com.kevinwang.tomatoClock.Task.Task;
+import com.kevinwang.tomatoClock.Task.TaskLab;
 
 import java.util.ArrayList;
 
