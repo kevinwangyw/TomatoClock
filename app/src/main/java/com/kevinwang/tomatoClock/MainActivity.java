@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         initToolbar(toolbar);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
         state = sharedPreferences.getInt(STATE, 0);
         // Get access to the custom title view
         clock_toolbar_text = (TextView) toolbar.findViewById(R.id.clock_toolbar_text);
@@ -118,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        System.out.println("MainActivity---->onCreateOptionsMenu(Menu menu)");
+        System.out.println("MainActivity---->onCreateOptionsMenu(Menu menu), state : " + state);
         getMenuInflater().inflate(R.menu.menu_main, menu);
         this.menu = menu;
         switch (state % 4) {

@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.kevinwang.tomatoClock.CircleTimeFragment;
 import com.kevinwang.tomatoClock.MainActivity;
@@ -54,13 +55,18 @@ public class TaskPostActivity extends AppCompatActivity{
         ///////////
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        String history_content = taskPostFragment.getPostTask();
-        historyDAO.createHistory(history_content);
-        System.out.println("历史数 ： " + historyDAO.getHistory().size());
-        historyDAO.close();
-
-
         if (item.getItemId() == R.id.menu_post_task) {
+
+            String history_content = taskPostFragment.getPostTask();
+
+            if (history_content.trim().length() == 0) {
+                Toast.makeText(this, "请输入完成的工作任务", Toast.LENGTH_SHORT).show();
+                return super.onOptionsItemSelected(item);
+            }
+
+            historyDAO.createHistory(history_content);
+            System.out.println("历史数 ： " + historyDAO.getHistory().size());
+
             if (MainActivity.getJustStart()) {
                 System.out.println("TaskPostFragment-------->onOptionsItemSelected : justStart = " + MainActivity.getJustStart());
                 MainActivity.setState(0);
@@ -92,11 +98,13 @@ public class TaskPostActivity extends AppCompatActivity{
     protected void onPause() {
         super.onPause();
         System.out.println("TaskPostActivity ------------> onPause()");
+        historyDAO.close();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         System.out.println("TaskPostActivity ------------> onStop()");
+        historyDAO.close();
     }
 }

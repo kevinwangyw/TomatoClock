@@ -1,9 +1,11 @@
 package com.kevinwang.tomatoClock.history;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +47,7 @@ public class TaskHistoryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        System.out.println("TaskHistoryFragment-------> onResume()");
         historyDAO.reopen();
         historyLab = historyDAO.getHistory();
         historyAdapter = new HistoryAdapter (getActivity());
@@ -53,12 +56,14 @@ public class TaskHistoryFragment extends Fragment {
 
     @Override
     public void onPause() {
+        System.out.println("TaskHistoryFragment-------> onPause()");
         super.onPause();
         historyDAO.close();
     }
 
     @Override
     public void onStop() {
+        System.out.println("TaskHistoryFragment-------> onStop()");
         super.onStop();
         historyDAO.close();
     }
@@ -81,7 +86,7 @@ public class TaskHistoryFragment extends Fragment {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
 
             if (convertView == null) {
@@ -101,7 +106,21 @@ public class TaskHistoryFragment extends Fragment {
             holder.delete_history_img.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    System.out.println("删除土豆记录在list中的位置 #" + position);
+                    System.out.println("删除土豆记录的id ： #" + historyLab.get(position).getId());
+                    System.out.println("删除之前的历史数 ： " + historyDAO.getHistory().size());
+                    System.out.println("--------------------------------");
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                    AlertDialog alertDialog = alertDialogBuilder.setMessage("确定要删除土豆记录吗？")
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    historyDAO.deleteHistory((historyLab.get(position)).getId());
+                                    historyLab.remove(historyLab.get(position));
+                                    notifyDataSetChanged();
+                                }
+                            }).setNegativeButton("取消", null).create();
+                    alertDialog.show();
                 }
             });
 

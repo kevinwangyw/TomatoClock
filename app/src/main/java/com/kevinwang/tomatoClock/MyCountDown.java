@@ -1,6 +1,7 @@
 package com.kevinwang.tomatoClock;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -139,6 +140,11 @@ public class MyCountDown extends CountDownTimer {
                     TimeRecord.setTaskEndTime(new Date());
                     MainActivity.setState(++state);
                     System.out.println("番茄倒计时完成，state：" + state);
+                    //从home启动某一个activity
+                    /*Intent intent = new Intent(context, MainActivity.class);
+                    context.startActivity(intent);*/
+                    SharedPreferences sharedPreferences = context.getSharedPreferences((context.getPackageName() + "_preferences"), Context.MODE_PRIVATE);
+                    sharedPreferences.edit().putInt("state", MainActivity.getState()).commit();
                     break;
                 case 3:
                     System.out.println("休息倒计时完成，state：" + MainActivity.getState());

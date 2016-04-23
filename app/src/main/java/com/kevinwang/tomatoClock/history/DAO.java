@@ -58,7 +58,7 @@ public class DAO {
         String[] args = {"date"};
         long dateCount = (db.query(dintinct, "taskHistory", args, null, null, null, null, null, null)).getCount();
         long headerPosition = dateCount;
-        System.out.println("DAO-------> 不相同的日期数 ： " + dateCount);
+        System.out.println("DAO------->getHistory (), 不相同的日期数 ： " + dateCount);
         Cursor cursor = db.query("taskHistory", null, null, null, null, null, null);
 
         if (cursor.moveToLast()) {

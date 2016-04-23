@@ -81,7 +81,10 @@ public class TaskPostFragment extends ListFragment{
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            convertView = getActivity().getLayoutInflater().inflate(R.layout.task_list_item, null);
+            if (convertView == null) {
+                convertView = getActivity().getLayoutInflater().inflate(R.layout.task_list_item, null);
+            }
+
 
             taskContent = (TextView)convertView.findViewById(R.id.task_content_text);
             taskContent.setText(mTasks.get(position).getContent());
@@ -112,10 +115,10 @@ public class TaskPostFragment extends ListFragment{
                             setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    mTasks.remove(mTasks.get(position));
-                                    adapter.notifyDataSetChanged();
                                     TaskLab.get(getActivity()).getTasks().remove(mTasks.get(position));
                                     TaskLab.get(getActivity()).saveTasks();
+                                    mTasks.remove(mTasks.get(position));
+                                    adapter.notifyDataSetChanged();
                                 }
                             }).setNegativeButton("取消", null).setTitle("删除任务").setMessage("确定要删除番茄任务吗?").create();
                     alertDialog.show();
