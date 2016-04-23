@@ -16,14 +16,14 @@ import java.util.ArrayList;
  */
 public class TaskHistoryFragment extends Fragment {
 
-    private ArrayList<HistoryOfDay> historyLab;
-    private HistoryDAO historyDAO;
+    private ArrayList<History> historyLab;
+    private DAO historyDAO;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        historyDAO = new HistoryDAO(getActivity());
+        historyDAO = new DAO(getActivity());
         historyLab = historyDAO.getHistory();
 
 

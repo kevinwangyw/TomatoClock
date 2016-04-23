@@ -4,6 +4,8 @@ package com.kevinwang.tomatoClock.history;
  * Created by lenovo on 2016/4/22.
  */
 public class History {
+    private String date;
+    private long listHeaderPosition;
     private String startTime;
     private String endTiem;
     private String taskContent;
@@ -39,6 +41,22 @@ public class History {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public long getListHeaderPosition() {
+        return listHeaderPosition;
+    }
+
+    public void setListHeaderPosition(long listHeaderPosition) {
+        this.listHeaderPosition = listHeaderPosition;
     }
 }
 // id date start end content
