@@ -20,6 +20,8 @@ import com.kevinwang.tomatoClock.history.TaskPostActivity;
 import com.kevinwang.tomatoClock.setting.SettingsActivity;
 import com.viewpagerindicator.TabPageIndicator;
 
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity {
     private TextView clock_toolbar_text;
     private ViewPager viewPager;
@@ -207,6 +209,7 @@ public class MainActivity extends AppCompatActivity {
                     //当state == count * 4 - 1 - 1的时候，休息时间设置为长休息时间
                     case 0:  //0:代表处在可以开始番茄时间状态
                         System.out.println("click case 0");
+                        TimeRecord.setTaskStartTime(new Date());
                         state++;
                         System.out.println("开始番茄时间, state :" + state);
                         item.setIcon(R.mipmap.ic_action_cancel);
@@ -331,6 +334,8 @@ public class MainActivity extends AppCompatActivity {
                     countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000 / 2, 1000);
                     countDownClock.setContext(this);
                     countDownClock.setTextView(clock_toolbar_text);
+                    TimeRecord.setTaskStartTime(new Date(sharedPreferences.getLong("start", new Date().getTime())));
+                    TimeRecord.setTaskEndTime(new Date(sharedPreferences.getLong("end", new Date().getTime())));
                 }
                 break;
             case 3:
@@ -379,6 +384,10 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         System.out.println("MainActivity---->onStop()");
         sharedPreferences.edit().putInt(STATE, state).commit();
+        if (state == 2) {
+            sharedPreferences.edit().putLong("start", TimeRecord.getTaskStartTime().getTime());
+            sharedPreferences.edit().putLong("end", TimeRecord.getTaskEndTime().getTime());
+        }
         active = false;
     }
 

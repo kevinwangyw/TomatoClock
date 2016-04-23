@@ -8,8 +8,20 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by lenovo on 2016/4/22.
  */
 public class HistorySQLiteHelper extends SQLiteOpenHelper{
+    private static HistorySQLiteHelper sHistorySQLiteHelperInstance;
 
-    public HistorySQLiteHelper(Context context) {
+    public static synchronized HistorySQLiteHelper getInstance(Context context) {
+
+        // Use the application context, which will ensure that you
+        // don't accidentally leak an Activity's context.
+        // See this article for more information: http://bit.ly/6LRzfx
+        if (sHistorySQLiteHelperInstance == null) {
+            sHistorySQLiteHelperInstance = new HistorySQLiteHelper(context);
+        }
+        return sHistorySQLiteHelperInstance;
+    }
+
+    private HistorySQLiteHelper(Context context) {
         super(context, "history_db", null, 3);
     }
 

@@ -61,6 +61,12 @@ public class TaskListFragment extends ListFragment{
 
     private GestureDetector gestureDetector;
 
+    public static TaskListFragment newInstance(Bundle bundle) {
+        TaskListFragment taskListFragment = new TaskListFragment();
+        taskListFragment.setArguments(bundle);
+        return taskListFragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         System.out.println("TaskListFragment-------->onCreate");

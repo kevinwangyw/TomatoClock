@@ -21,12 +21,15 @@ import com.kevinwang.tomatoClock.R;
  */
 public class TaskPostActivity extends AppCompatActivity{
     private FragmentManager fragmentManager;
+    private DAO historyDAO;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         System.out.println("TaskPostActivity ------------> onCreate()");
         setContentView(R.layout.fragment_not_main_container);
+
+        historyDAO = new DAO(this);
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar_not_main);
         setSupportActionBar(toolbar);
@@ -47,9 +50,15 @@ public class TaskPostActivity extends AppCompatActivity{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        fragmentManager.getFragments();
+        TaskPostFragment taskPostFragment = (TaskPostFragment)fragmentManager.getFragments().get(0);
         ///////////
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        String history_content = taskPostFragment.getPostTask();
+        historyDAO.createHistory(history_content);
+        System.out.println("历史数 ： " + historyDAO.getHistory().size());
+        historyDAO.close();
+
 
         if (item.getItemId() == R.id.menu_post_task) {
             if (MainActivity.getJustStart()) {

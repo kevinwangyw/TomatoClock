@@ -19,4 +19,6 @@
     <string name="seekbar_text">abc</string>
     <string name="circle_time_title">番茄土豆</string>
     <string name="post_task">提交工作</string>
+    <string name="timeRecord"/>
+    <string name="content"/>
 </resources>

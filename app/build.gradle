@@ -26,4 +26,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile project(':viewPager_library')
     compile 'com.android.support:support-v4:23.3.0'
+    compile 'se.emilsjolander:stickylistheaders:2.7.0'
 }

@@ -18,7 +18,11 @@ public class DAO {
     private HistorySQLiteHelper dbHelper;
 
     public DAO(Context context) {
-        dbHelper = new HistorySQLiteHelper(context);
+        dbHelper = HistorySQLiteHelper.getInstance(context);
+        db = dbHelper.getWritableDatabase();
+    }
+
+    public void reopen() {
         db = dbHelper.getWritableDatabase();
     }
 
@@ -32,6 +36,8 @@ public class DAO {
         String dateStr = DateFormat.getDateInstance().format(TimeRecord.getTaskStartTime());
         String startTime = DateFormat.getTimeInstance().format(TimeRecord.getTaskStartTime());
         String endTme = DateFormat.getTimeInstance().format(TimeRecord.getTaskEndTime());
+        System.out.println("createHistory (String content) :    date   startTime    endTime");
+        System.out.println("                                   " + dateStr + "  " + startTime + "  " + endTme);
         cv.put("date", dateStr);
         cv.put("start_time", startTime);
         cv.put("end_time", endTme);
@@ -52,19 +58,21 @@ public class DAO {
         String[] args = {"date"};
         long dateCount = (db.query(dintinct, "taskHistory", args, null, null, null, null, null, null)).getCount();
         long headerPosition = dateCount;
+        System.out.println("DAO-------> 不相同的日期数 ： " + dateCount);
         Cursor cursor = db.query("taskHistory", null, null, null, null, null, null);
 
         if (cursor.moveToLast()) {
 
             String tempDate = cursor.getString(1);
 
-            for (int i = cursor.getCount() - 1; i > 0; i--) {
+            for (int i = cursor.getCount() - 1; i >= 0; i--) {
                 if (cursor.getString(1).compareTo(tempDate) != 0) {
                     dateCount--;
                     tempDate = cursor.getString(1);
                 }
                 History history = initHistory(cursor, (headerPosition - dateCount));
-                cursor.moveToNext();
+                list.add(history);
+                cursor.moveToPrevious();
             }
         }
 
@@ -77,8 +85,8 @@ public class DAO {
         history.setId(cursor.getInt(0));
         history.setDate(cursor.getString(1));
         history.setStartTime(cursor.getString(2));
-        history.setEndTiem(cursor.getString(3));
-        history.setTaskContent(cursor.getString(4));
+        history.setEndTime(cursor.getString(3));
+        history.setContent(cursor.getString(4));
         return history;
     }
 }

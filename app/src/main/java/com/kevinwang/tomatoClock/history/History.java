@@ -7,8 +7,8 @@ public class History {
     private String date;
     private long listHeaderPosition;
     private String startTime;
-    private String endTiem;
-    private String taskContent;
+    private String endTime;
+    private String content;
     private int id;
 
     public String getStartTime() {
@@ -19,20 +19,20 @@ public class History {
         this.startTime = startTime;
     }
 
-    public String getEndTiem() {
-        return endTiem;
+    public String getEndTime() {
+        return endTime;
     }
 
-    public void setEndTiem(String endTiem) {
-        this.endTiem = endTiem;
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
-    public String getTaskContent() {
-        return taskContent;
+    public String getContent() {
+        return content;
     }
 
-    public void setTaskContent(String taskContent) {
-        this.taskContent = taskContent;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public int getId() {

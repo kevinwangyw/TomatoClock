@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.kevinwang.tomatoClock.history.TaskPostActivity;
 
+import java.util.Date;
+
 /**
  * Created by lenovo on 2016/4/15.
  */
@@ -127,7 +129,7 @@ public class CircleTimeFragment extends Fragment implements View.OnClickListener
             //当state == count * 4 - 1 - 1的时候，休息时间设置为长休息时间
             case 0:  //0:代表处在可以开始番茄时间状态
                 System.out.println("click case 0");
-
+                TimeRecord.setTaskStartTime(new Date());
                 MainActivity.setState(state + 1);
                 circleProgressBar.setProgress(0);
                 countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000 / 2, 1000);

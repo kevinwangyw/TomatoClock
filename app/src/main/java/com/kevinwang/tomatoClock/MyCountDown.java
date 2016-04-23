@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -102,7 +103,7 @@ public class MyCountDown extends CountDownTimer {
                     System.out.println("番茄倒计时完成，state：" + state);
                     //((MainActivity)context).onPrepareOptionsMenu(menu);
                     ((MainActivity)context).invalidateOptionsMenu();
-
+                    TimeRecord.setTaskEndTime(new Date());
                     break;
                 case 3:
                     //((MainActivity)context).onPrepareOptionsMenu(menu);
@@ -119,6 +120,7 @@ public class MyCountDown extends CountDownTimer {
             fragment.setCircleProgress(0);
             switch (state % 4) {
                 case 1:
+                    TimeRecord.setTaskEndTime(new Date());
                     MainActivity.setState(++state);
                     System.out.println("番茄倒计时完成，state：" + state);
                     fragment.updateViewForOnFinish();
@@ -134,6 +136,7 @@ public class MyCountDown extends CountDownTimer {
         else {
             switch (state % 4) {
                 case 1:
+                    TimeRecord.setTaskEndTime(new Date());
                     MainActivity.setState(++state);
                     System.out.println("番茄倒计时完成，state：" + state);
                     break;

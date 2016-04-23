@@ -3,7 +3,7 @@
                 android:id="@+id/task_layout_parent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#BFBFBF"
+                android:background="#E0E0E0"
                 android:descendantFocusability="beforeDescendants"
                 android:focusableInTouchMode="true"
                 android:orientation="vertical">
