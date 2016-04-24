@@ -30,14 +30,14 @@ public class CircleTimeFragment extends Fragment implements View.OnClickListener
     private SharedPreferences sharedPreferences;
     private CircleProgressBar circleProgressBar;
 
-    private static final String KEY_RINGTONE_USING_STATE = "ringtone_using_state";
-    private static final String KEY_RINGTONE_SETTING = "ringtone_setting";
-    private static final String KEY_IS_VIBRATE = "is_vibrate";
-    private static final String KEY_IS_LONG_VIBRATE = "is_long_vibrate";
     private static final String KEY_TOMATO_LENGTH = "tomato_length";
     private static final String KEY_REST_LENGTH = "rest_length";
     private static final String KEY_LONG_REST_LENGTH = "long_rest_length";
     private static final String KEY_COUNT_INTERVAL = "long_rest_interval_count";
+
+    private Intent notificationIntent;
+    private static int notification_id = 0;
+    private NotificationAdmin notificationAdmin;
 
     public static Boolean getActive() {
         return active;
@@ -58,6 +58,9 @@ public class CircleTimeFragment extends Fragment implements View.OnClickListener
         super.onCreate(savedInstanceState);
         System.out.println("CircleTimeFragment----->onCreate()");
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        notificationAdmin = NotificationAdmin.getNotification();
+        notificationIntent = new Intent(getActivity(), MainActivity.class);
     }
 
     @Nullable
@@ -77,6 +80,7 @@ public class CircleTimeFragment extends Fragment implements View.OnClickListener
     @Override
     public void onResume() {
         super.onResume();
+
         System.out.println("CircleTimeFragment----->onResume()");
         countDownClock = MyCountDown.getInstance();
         countDownClock.setContext(getActivity());
@@ -109,6 +113,7 @@ public class CircleTimeFragment extends Fragment implements View.OnClickListener
     @Override
     public void onPause() {
         super.onPause();
+        sharedPreferences.edit().putInt("state", MainActivity.getState()).commit();
         System.out.println("CircleTimeFragment----->onPause()");
         active = false;
     }
@@ -135,14 +140,14 @@ public class CircleTimeFragment extends Fragment implements View.OnClickListener
                 countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000 / 2, 1000);
                 countDownClock.setContext(getActivity());
                 countDownClock.setTextView(textView);
-                System.out.println("开始番茄时间, state :" + state);
+                System.out.println("开始番茄时间, state :" + MainActivity.getState());
                 imageView.setImageResource(R.drawable.ic_action_cancel);
                 countDownClock.start();
                 //Toast.makeText(getApplicationContext(),"change working state to " + working_state.toString(),Toast.LENGTH_SHORT).show();
                 break;
             case 1: //1：代表处在番茄时间内
                 System.out.println("click case 1");
-                System.out.println("处于番茄时间中, state :" + state);
+                System.out.println("处于番茄时间中, state :" + MainActivity.getState());
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
                 AlertDialog alertDialog = alertDialogBuilder.setTitle("放弃番茄").setMessage("确定要放弃这个番茄时间吗？")
                         .setPositiveButton("放弃番茄", new DialogInterface.OnClickListener() {
@@ -162,7 +167,7 @@ public class CircleTimeFragment extends Fragment implements View.OnClickListener
             case 2:  //2：代表显示番茄时间完成，标志为钩
                 circleProgressBar.setProgress(0);
                 System.out.println("click case 2");
-                System.out.println("提交番茄时间，state：" + state);
+                System.out.println("提交番茄时间，state：" + MainActivity.getState());
                 //imageView.setImageResource(R.drawable.ic_action_cancel);
                 if (MainActivity.getJustStart()) {
 
@@ -191,6 +196,7 @@ public class CircleTimeFragment extends Fragment implements View.OnClickListener
                 startActivity(intent);
                 break;
             case 3:  //3：代表处在休息时间
+                notificationAdmin.showNotification(notificationIntent, R.mipmap.ic_launcher, "休息结束", "");
                 System.out.println("click case 3");
                 countDownClock.cancel();
                 circleProgressBar.setProgress(0);

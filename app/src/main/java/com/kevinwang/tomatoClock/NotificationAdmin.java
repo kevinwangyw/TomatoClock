@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
-import android.widget.RemoteViews;
 
 /**
  * Created by lenovo on 2016/4/24.
@@ -17,10 +16,11 @@ public class NotificationAdmin {
     private static int NOTIFICATION_ID;
     private NotificationManager notificationManager;
     private Notification notification;
+
     private NotificationCompat.Builder notificationBuilder;
     private Context context;
-    int requestCode = (int) SystemClock.uptimeMillis();
-    private static final int FLAG = Notification.FLAG_INSISTENT;
+    private int requestCode = (int) SystemClock.uptimeMillis();
+    private static final int FLAG = PendingIntent.FLAG_UPDATE_CURRENT;
 
     public NotificationAdmin(Context context, int id) {
         this.context = context;
@@ -30,12 +30,12 @@ public class NotificationAdmin {
         notificationBuilder = new NotificationCompat.Builder(context);
     }
 
-    public NotificationAdmin getNotification (Context context, int id) {
+    public static NotificationAdmin getNotification (Context context, int id) {
         notificationAdmin = new NotificationAdmin(context, id);
         return notificationAdmin;
     }
 
-    public NotificationAdmin getNotification() {
+    public static NotificationAdmin getNotification() {
         return notificationAdmin;
     }
 
@@ -44,9 +44,8 @@ public class NotificationAdmin {
      *
      * @param intent
      * @param smallIcon
-     * @param ticker
      */
-    private void setCompatBuilder(Intent intent, int smallIcon, String ticker, String title, String msg) {
+    private void setCompatBuilder(Intent intent, int smallIcon, String title, String msg) {
         // 如果当前Activity启动在前台，则不开启新的Activity。
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         // 当设置下面PendingIntent.FLAG_UPDATE_CURRENT这个参数的时候，常常使得点击通知栏没效果，你需要给notification设置一个独一无二的requestCode
@@ -56,11 +55,8 @@ public class NotificationAdmin {
         notificationBuilder.setContentIntent(pIntent);// 该通知要启动的Intent
 
         notificationBuilder.setSmallIcon(smallIcon);// 设置顶部状态栏的小图标
-        notificationBuilder.setTicker(ticker);// 在顶部状态栏中的提示信息
-
         notificationBuilder.setContentTitle(title);// 设置通知中心的标题
         notificationBuilder.setContentText(msg);// 设置通知中心中的内容
-        notificationBuilder.setWhen(System.currentTimeMillis());
 
         /*
          * 将AutoCancel设为true后，当你点击通知栏的notification后，它会自动被取消消失,
@@ -81,6 +77,26 @@ public class NotificationAdmin {
          * Notification.DEFAULT_LIGHTS：系统默认闪光。
          * notifyBuilder.setDefaults(Notification.DEFAULT_ALL);
          */
-        notificationBuilder.setDefaults(Notification.DEFAULT_LIGHTS);
+        //notificationBuilder.setDefaults(Notification.DEFAULT_LIGHTS);
     }
+
+    public void showNotification (Intent intent, int smallIcon, String title, String msg) {
+        setCompatBuilder(intent, smallIcon, title, msg);
+        sent();
+    }
+
+    private void sent() {
+        notification = notificationBuilder.build();
+        notification.flags |= Notification.FLAG_NO_CLEAR;
+        notificationManager.notify(NOTIFICATION_ID, notification);
+    }
+
+    public int getRequestCode() {
+        return requestCode;
+    }
+
+    public void setRequestCode(int requestCode) {
+        this.requestCode = requestCode;
+    }
+
 }

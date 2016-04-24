@@ -27,31 +27,26 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private Toolbar toolbar;
     private MyCountDown countDownClock;
-    private long tomatoTimeSpan;
-    private long restTimeSpan;
-    private long longRestTimeSpan;
     private SharedPreferences sharedPreferences;
 
     private static Menu menu;
 
-    private static final String KEY_RINGTONE_USING_STATE = "ringtone_using_state";
-    private static final String KEY_RINGTONE_SETTING = "ringtone_setting";
-    private static final String KEY_IS_VIBRATE = "is_vibrate";
-    private static final String KEY_IS_LONG_VIBRATE = "is_long_vibrate";
     private static final String KEY_TOMATO_LENGTH = "tomato_length";
     private static final String KEY_REST_LENGTH = "rest_length";
     private static final String KEY_LONG_REST_LENGTH = "long_rest_length";
     private static final String KEY_COUNT_INTERVAL = "long_rest_interval_count";
     private static final String STATE = "state";
-    private static final String APP_CLOSE_TIME = "app_close_time";
-    private static final String LEFT_TIME_WHEN_CLOSE = "left_time_when_close";
     private static Boolean active = false;
     private static int state = 0;
     private static Boolean justStart = true;
 
+    private Intent notificationIntent;
+    private static int notification_id = 0;
+    private NotificationAdmin notificationAdmin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("MainActivity---->onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment_container);
 
@@ -69,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
         initToolbar(toolbar);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
         state = sharedPreferences.getInt(STATE, 0);
         // Get access to the custom title view
         clock_toolbar_text = (TextView) toolbar.findViewById(R.id.clock_toolbar_text);
@@ -83,6 +77,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        notificationAdmin = NotificationAdmin.getNotification(this, notification_id);
+        notificationIntent = new Intent(this, MainActivity.class);
+        if (justStart) {
+            notificationAdmin.showNotification(notificationIntent, R.mipmap.ic_launcher, "番茄时钟", "");
+        }
 
         System.out.println("justStart : " + justStart);
 
@@ -269,6 +269,7 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                         break;
                     case 3:  //3：代表处在休息时间
+                        notificationAdmin.showNotification(notificationIntent, R.mipmap.ic_launcher, "休息结束", "");
                         System.out.println("click case 3");
                         countDownClock.cancel();
                         clock_toolbar_text.setText(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) + " : 00");
@@ -295,6 +296,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
 
         //setupUI(findViewById(R.id.main_layout_parent));
         System.out.println("MainActivity---->onResume()");
@@ -329,6 +331,7 @@ public class MainActivity extends AppCompatActivity {
             case 2:
                 clock_toolbar_text.setText("已完成番茄时间");
                 if (justStart) {
+                    notificationAdmin.showNotification(notificationIntent, R.mipmap.ic_launcher, "完成番茄", "请提交任务");
                     countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000 / 2, 1000);
                     countDownClock.setContext(this);
                     countDownClock.setTextView(clock_toolbar_text);
