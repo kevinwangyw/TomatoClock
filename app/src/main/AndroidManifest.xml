@@ -36,6 +36,10 @@
         <activity android:name=".history.TaskPostActivity"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".setting.AboutAuthorActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".setting.SettingsActivity">
 
         </activity>
     </application>

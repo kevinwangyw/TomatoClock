@@ -2,6 +2,7 @@ package com.kevinwang.tomatoClock.setting;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -57,6 +58,7 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        System.out.println("SettingFragment------------>onCreate() : ");
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         // Load the preferences from an XML resource
@@ -66,10 +68,11 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
 
         initialPreference(sharedPreferences);
 
-        System.out.println(sharedPreferences.getInt(KEY_LONG_REST_LENGTH,1));
+        System.out.println(sharedPreferences.getInt(KEY_LONG_REST_LENGTH, 1));
     }
 
-    private void initialPreference (SharedPreferences sharedPreferences) {
+    private void initialPreference(SharedPreferences sharedPreferences) {
+        System.out.println("SettingFragment------------>initialPreference(): ");
         ((EditTextPreference) findPreference(KEY_DAY_GOAL)).setSummary(sharedPreferences.getString(KEY_DAY_GOAL, ""));
         ((EditTextPreference) findPreference(KEY_WEEK_GOAL)).setSummary(sharedPreferences.getString(KEY_WEEK_GOAL, ""));
         ((EditTextPreference) findPreference(KEY_MONTH_GOAL)).setSummary(sharedPreferences.getString(KEY_MONTH_GOAL,
@@ -79,7 +82,7 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         if (sharedPreferences.getBoolean(KEY_RINGTONE_USING_STATE, false)) {
             mRingTone.setEnabled(true);
         } else {
-            sharedPreferences.edit().putString(KEY_RINGTONE_SETTING, "".toString()).commit();
+            //sharedPreferences.edit().putString(KEY_RINGTONE_SETTING, "".toString()).commit();
             mRingTone.setEnabled(false);
         }
         mRingTone.setSummary(getRingtoneName(Uri.parse(sharedPreferences.getString(KEY_RINGTONE_SETTING, ""))));
@@ -99,23 +102,27 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
 
     @Override
     public void onResume() {
+        System.out.println("SettingFragment------------>onResume(): ");
         super.onResume();
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void onPause() {
+        System.out.println("SettingFragment------------>onPause(): ");
         super.onPause();
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void onStop() {
+        System.out.println("SettingFragment------------>onPause(): ");
         super.onStop();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        System.out.println("SettingFragment------------>onCreateView(): ");
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -124,10 +131,19 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
         super.onPreferenceTreeClick(preferenceScreen, preference);
 
-        if (preference instanceof PreferenceScreen) {
+        if (preference.getKey().compareTo("about_tomato_task") == 0) {
+            Uri uri = Uri.parse("http://baike.baidu" +
+                    ".com/link?url=b7rlhS6YssFup2xqAjnw9__6VsQnyhtVT8Gx_-qwckUE4IZ-ns6i_jw9w_aKH" +
+                    "-C_sjWheb9NFR_GZcfUII0bV_");
+            startActivity(new Intent(Intent.ACTION_VIEW, uri));
+        }
+        else if (preference.getKey().compareTo("about_author") == 0) {
+            Intent intent = new Intent(getActivity(), AboutAuthorActivity.class);
+            startActivity(intent);
+        }
+        else if (preference instanceof PreferenceScreen) {
             setUpNestedScreen((PreferenceScreen) preference);
         }
-
         return false;
     }
 
@@ -178,6 +194,7 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        System.out.println("SettingFragment------------>onSharedPreferenceChanged : ");
 
         Vibrator vibrator = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -195,12 +212,14 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         }
         //--------------------
         if (key.compareTo(KEY_RINGTONE_USING_STATE) == 0) {
+            System.out.println("ringtone using state was changed to : " + sharedPreferences.getBoolean(key, false));
             //System.out.println(sharedPreferences.getBoolean(key,false));
             if (sharedPreferences.getBoolean(key, false)) {
                 mRingTone.setEnabled(true);
             } else {
-                sharedPreferences.edit().putString(KEY_RINGTONE_SETTING, "".toString()).commit();
-                mRingTone.setSummary(getRingtoneName(Uri.parse(sharedPreferences.getString(KEY_RINGTONE_SETTING, ""))));
+                //sharedPreferences.edit().putString(KEY_RINGTONE_SETTING, "".toString()).commit();
+                //mRingTone.setSummary(getRingtoneName(Uri.parse(sharedPreferences.getString(KEY_RINGTONE_SETTING,
+                // ""))));
                 mRingTone.setEnabled(false);
             }
         }
@@ -224,13 +243,12 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
                 long[] pattern = {
                         0,  // Start immediately
                         dash, short_gap, dash, short_gap, dash,
-                        short_gap, dash, short_gap, dash,short_gap,
+                        short_gap, dash, short_gap, dash, short_gap,
                         dash, short_gap, dash
                 };
                 // Only perform this pattern one time (-1 means "do not repeat")
                 vibrator.vibrate(pattern, -1);
-            }
-            else {
+            } else {
                 vibrator.cancel();
             }
         }
@@ -238,6 +256,8 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         if (key.compareTo(KEY_TOMATO_LENGTH) == 0) {
 
         }
+        //-------------------
+
     }
 
     @Override
@@ -245,6 +265,7 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         Uri ringtoneUri = Uri.parse((String) newValue);
         String strSummary = getRingtoneName(ringtoneUri);
         preference.setSummary(strSummary);
+        System.out.println("ringtone was changed to : " + strSummary);
         // 此处必须加上，否则不会保存
         sharedPreferences.edit().putString(preference.getKey(), (String) newValue).commit();
 

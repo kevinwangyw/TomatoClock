@@ -2,20 +2,28 @@ package com.kevinwang.tomatoClock;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.CountDownTimer;
+import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Created by lenovo on 2016/4/13.
  */
 public class MyCountDown extends CountDownTimer {
+    private MediaPlayer mediaPlayer;
     private static MyCountDown instance = null;
     private Context context;
     private TextView textView;
@@ -95,6 +103,9 @@ public class MyCountDown extends CountDownTimer {
 /*        Menu menu = newMenuInstance(context);
         MenuInflater menuInflater = new MenuInflater(context);
         menuInflater.inflate(R.menu.menu_main, menu);*/
+        SharedPreferences sharedPreferences = context.getSharedPreferences((context.getPackageName() + "_preferences"), Context.MODE_PRIVATE);
+        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+
         int state = MainActivity.getState();
         System.out.println("state : " + state);
         if (MainActivity.getActive()) {
@@ -143,7 +154,6 @@ public class MyCountDown extends CountDownTimer {
                     //从home启动某一个activity
                     /*Intent intent = new Intent(context, MainActivity.class);
                     context.startActivity(intent);*/
-                    SharedPreferences sharedPreferences = context.getSharedPreferences((context.getPackageName() + "_preferences"), Context.MODE_PRIVATE);
                     sharedPreferences.edit().putInt("state", MainActivity.getState()).commit();
                     break;
                 case 3:
@@ -152,6 +162,57 @@ public class MyCountDown extends CountDownTimer {
                     break;
             }
         }
+        if (sharedPreferences.getBoolean("is_long_vibrate", false))
+        {
+            // The following numbers represent millisecond lengths
+            int dash = 500;     // Length of a Morse Code "dash" in milliseconds
+            int short_gap = 250;    // Length of Gap Between dots/dashes
+            long[] pattern = {
+                    0,  // Start immediately
+                    dash, short_gap, dash, short_gap, dash,
+                    short_gap, dash, short_gap, dash,short_gap,
+                    dash, short_gap, dash
+            };
+            // Only perform this pattern one time (-1 means "do not repeat")
+            vibrator.vibrate(pattern, -1);
+        }
+        else if (sharedPreferences.getBoolean("is_vibrate", false)) {
+            vibrator.vibrate(1000);
+        }
+        if (sharedPreferences.getBoolean("ringtone_using_state", false)) {
+            String alarms = sharedPreferences.getString("ringtone_setting", "");
+            Uri uri = Uri.parse(alarms);
+            playNotification(context, uri);
+        }
+
+        //System.out.println("test if it is executed at the same time with or after vibrate");
+    }
+
+    private void playNotification (Context context, Uri alert) {
+        long ringtoneDelay = 3500;
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                mediaPlayer.stop();
+            }
+        };
+        Timer timer = new Timer();
+
+        mediaPlayer = new MediaPlayer();
+        try {
+            mediaPlayer.setDataSource(context, alert);
+            final AudioManager audioManager = (AudioManager) context
+                    .getSystemService(Context.AUDIO_SERVICE);
+            if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+                mediaPlayer.prepare();
+                mediaPlayer.start();
+            }
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        //activate a task after a specific delay
+        timer.schedule(timerTask, ringtoneDelay);
     }
 
 /*    protected Menu newMenuInstance(Context context) {

@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="settings"
     android:title="@string/setting_title">
-
+<!--
     <PreferenceCategory
         android:title="@string/accounts_setting">
         <PreferenceScreen
@@ -21,7 +21,7 @@
                 />
         </PreferenceScreen>
     </PreferenceCategory>
-
+-->
     <PreferenceCategory
         android:title="音效">
         <PreferenceScreen
@@ -120,8 +120,11 @@
         <PreferenceScreen
             android:key="about_tomato_task"
             android:title="关于番茄工作法">
-
         </PreferenceScreen>
+
+        <PreferenceScreen
+            android:key="about_author"
+            android:title="关于作者"></PreferenceScreen>
 
     </PreferenceCategory>
 
