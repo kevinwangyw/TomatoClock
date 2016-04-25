@@ -21,7 +21,6 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
     private boolean mTrackingTouch;
     private TextView val_text;
     private String mtype;
-    private int seekbar_case;
 
     public SeekBarPreference(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -30,20 +29,16 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
 
         switch (getKey()) {
             case "long_rest_interval_count":
-                setMax(6);
-                seekbar_case = 4;
+                setMax(10);
                 break;
             case "long_rest_length":
-                setMax(15);
-                seekbar_case = 10;
+                setMax(25);
                 break;
             case "rest_length":
-                setMax(10);
-                seekbar_case = 5;
+                setMax(15);
                 break;
             case "tomato_length":
-                setMax(25);
-                seekbar_case = 15;
+                setMax(40);
                 break;
         }
 
@@ -78,7 +73,7 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
         seekBar.setEnabled(isEnabled());
         seekBar.setOnSeekBarChangeListener(this);
         val_text = (TextView) view.findViewById(R.id.seekbar_info);
-        val_text.setText(String.valueOf(mProgress+seekbar_case)+" "+mtype);
+        val_text.setText(String.valueOf(mProgress)+" "+mtype);
     }
 
     /* @Override
@@ -90,10 +85,6 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
     public void setSeekBarInfo (String type) {
         mtype = type;
         notifyChanged();
-    }
-
-    public void set_seekbarCase (int val) {
-        seekbar_case = val;
     }
 
     public void setMax(int max) {
@@ -116,7 +107,7 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
 
     @Override
     protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
-        setProgress(restorePersistedValue ? getPersistedInt(mProgress) - seekbar_case: (Integer) defaultValue);
+        setProgress(restorePersistedValue ? getPersistedInt(mProgress) : (Integer) defaultValue);
        /* Each getPersisted*() method takes an argument that specifies the default value
         to use in case there is actually no persisted value or the key does not exist.*/
     }
@@ -143,7 +134,7 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
     }
 
     public int getProgress() {
-        return mProgress + seekbar_case;
+        return mProgress;
     }
 
     /**
@@ -154,16 +145,8 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
         int progress = seekBar.getProgress();
 
         if (progress != mProgress) {
-/*            if (callChangeListener(progress)) {
-                //Call this method callChangeListener after the user changes the preference, but before the
-                //internal state is set. This allows the client to ignore the user value.*/
             setProgress(progress, false);
-            val_text.setText(String.valueOf(mProgress + seekbar_case) + " " + mtype);
-/*            } else {
-                System.out.println("----->callChangeListener(progress) == false<------" +  getPersistedInt(0));
-                seekBar.setProgress(mProgress);
-                val_text.setText(String.valueOf(mProgress + seekbar_case) + " " + mtype);
-            }*/
+            val_text.setText(String.valueOf(mProgress) + " " + mtype);
         }
     }
 
@@ -268,7 +251,6 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
         myState.progress = mProgress;
         myState.max = mMax;
         myState.type = mtype;
-        myState.val_base = seekbar_case;
         return myState;
     }
 
@@ -287,11 +269,10 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
         mProgress = myState.progress;
         mMax = myState.max;
         mtype = myState.type;
-        seekbar_case = myState.val_base;
         notifyChanged();
 
         // Set this Preference's widget to reflect the restored state
-        val_text.setText(String.valueOf(mProgress + seekbar_case) + " " + mtype);
+        val_text.setText(String.valueOf(mProgress) + " " + mtype);
     }
 
 }

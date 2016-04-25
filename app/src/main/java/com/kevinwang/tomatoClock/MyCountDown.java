@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,7 +27,7 @@ public class MyCountDown extends CountDownTimer {
     private static MyCountDown instance = null;
     private Context context;
     private TextView textView;
-    private MenuItem menuItem;
+    private static long totalTime;
 
     /**
      * @param millisInFuture    The number of millis in the future from the call
@@ -46,6 +45,7 @@ public class MyCountDown extends CountDownTimer {
             instance = new MyCountDown(millisInFuture, countDownInterval);
         }*/
         instance = new MyCountDown(millisInFuture, countDownInterval);
+        totalTime = millisInFuture;
         return instance;
     }
 
@@ -62,10 +62,6 @@ public class MyCountDown extends CountDownTimer {
         this.textView = textView;
     }
 
-    public void setMenuItem(MenuItem menuItem) {
-        this.menuItem = menuItem;
-    }
-
     @Override
     public void onTick(long millisUntilFinished) {
         String countDownTime = String.format("%d : %d",
@@ -76,9 +72,6 @@ public class MyCountDown extends CountDownTimer {
         );
 
         if (MainActivity.getActive()) {
-/*                LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View view = inflater.inflate(R.layout.activity_fragment_container, null);
-                final TextView textView = (TextView)view.findViewById(R.id.clock_toolbar_text);*/
             showCountDownTime(countDownTime, millisUntilFinished);
         }
         else if (CircleTimeFragment.getActive()) {
@@ -91,10 +84,10 @@ public class MyCountDown extends CountDownTimer {
         NotificationAdmin notificationAdmin = NotificationAdmin.getNotification();
         Intent intent = new Intent(context, MainActivity.class);
         if (MainActivity.getState() % 4 == 1) {
-            notificationAdmin.showNotification(intent, R.mipmap.ic_launcher, "工作中", countDownTime);
+            notificationAdmin.showNotification(intent, R.mipmap.logo, "工作中", countDownTime);
         }
         if (MainActivity.getState() % 4 == 3) {
-            notificationAdmin.showNotification(intent, R.mipmap.ic_launcher, "休息中", countDownTime);
+            notificationAdmin.showNotification(intent, R.mipmap.logo, "休息中", countDownTime);
         }
     }
 
@@ -104,7 +97,7 @@ public class MyCountDown extends CountDownTimer {
         if (CircleTimeFragment.getActive()) {
             CircleTimeFragment fragment = (CircleTimeFragment) ((CircleTimeActivity)context)
                     .getSupportFragmentManager().findFragmentByTag("circle_fragment");
-            fragment.setCircleProgress(millisUntilFinished);
+            fragment.setCircleProgress(millisUntilFinished, totalTime);
         }
     }
 
@@ -128,10 +121,10 @@ public class MyCountDown extends CountDownTimer {
                     //((MainActivity)context).onPrepareOptionsMenu(menu);
                     ((MainActivity)context).invalidateOptionsMenu();
                     TimeRecord.setTaskEndTime(new Date());
-                    notificationAdmin.showNotification(intent, R.mipmap.ic_launcher, "完成番茄", "请提交任务");
+                    notificationAdmin.showNotification(intent, R.mipmap.logo, "完成番茄", "请提交任务");
                     break;
                 case 3:
-                    notificationAdmin.showNotification(intent, R.mipmap.ic_launcher, "休息结束", "");
+                    notificationAdmin.showNotification(intent, R.mipmap.logo, "休息结束", "");
                     //((MainActivity)context).onPrepareOptionsMenu(menu);
                     ((MainActivity)context).invalidateOptionsMenu();
                     System.out.println("休息倒计时完成，state：" + MainActivity.getState());
@@ -143,7 +136,7 @@ public class MyCountDown extends CountDownTimer {
             View view = layoutInflater.inflate(R.layout.fragment_circle_time, null);
             CircleTimeFragment fragment = (CircleTimeFragment) ((CircleTimeActivity)context)
                     .getSupportFragmentManager().findFragmentByTag("circle_fragment");
-            fragment.setCircleProgress(0);
+            fragment.setCircleProgress(0, totalTime);
             switch (state % 4) {
                 case 1:
                     TimeRecord.setTaskEndTime(new Date());
@@ -151,11 +144,11 @@ public class MyCountDown extends CountDownTimer {
                     System.out.println("番茄倒计时完成，state：" + state);
                     fragment.updateViewForOnFinish();
                     textView.setText("已完成番茄时间");
-                    notificationAdmin.showNotification(intent, R.mipmap.ic_launcher, "完成番茄", "请提交任务");
+                    notificationAdmin.showNotification(intent, R.mipmap.logo, "完成番茄", "请提交任务");
                     ((ImageView)view.findViewById(R.id.worrking_state)).setImageResource(R.drawable.ic_action_tick);
                     break;
                 case 3:
-                    notificationAdmin.showNotification(intent, R.mipmap.ic_launcher, "休息结束", "");
+                    notificationAdmin.showNotification(intent, R.mipmap.logo, "休息结束", "");
                     System.out.println("休息倒计时完成，state：" + MainActivity.getState());
                     fragment.updateViewForOnFinish();
                     break;
@@ -167,14 +160,14 @@ public class MyCountDown extends CountDownTimer {
                     TimeRecord.setTaskEndTime(new Date());
                     MainActivity.setState(++state);
                     System.out.println("番茄倒计时完成，state：" + state);
-                    notificationAdmin.showNotification(intent, R.mipmap.ic_launcher, "完成番茄", "请提交任务");
+                    notificationAdmin.showNotification(intent, R.mipmap.logo, "完成番茄", "请提交任务");
                     //从home启动某一个activity
                     /*Intent intent = new Intent(context, MainActivity.class);
                     context.startActivity(intent);*/
                     sharedPreferences.edit().putInt("state", MainActivity.getState()).commit();
                     break;
                 case 3:
-                    notificationAdmin.showNotification(intent, R.mipmap.ic_launcher, "休息结束", "");
+                    notificationAdmin.showNotification(intent, R.mipmap.logo, "休息结束", "");
                     System.out.println("休息倒计时完成，state：" + MainActivity.getState());
                     MainActivity.setState(++state);
                     break;

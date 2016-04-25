@@ -112,10 +112,6 @@
     <PreferenceCategory
         android:key="other_pref_screen"
         android:title="其他">
-        <PreferenceScreen
-            android:title="@string/ui_setting_title">
-
-        </PreferenceScreen>
 
         <PreferenceScreen
             android:key="about_tomato_task"

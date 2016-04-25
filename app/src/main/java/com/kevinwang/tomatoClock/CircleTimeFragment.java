@@ -77,15 +77,26 @@ public class CircleTimeFragment extends Fragment implements View.OnClickListener
         return view;
     }
 
+    private MyCountDown setCountDownClock (long millisInFuture, long countDownInterval) {
+        MyCountDown myCountDown = MyCountDown.getInstance(millisInFuture, countDownInterval);
+        myCountDown.setContext(getActivity());
+        myCountDown.setTextView(textView);
+        return myCountDown;
+    }
+
+    private MyCountDown setCountDownClock() {
+        MyCountDown myCountDown = MyCountDown.getInstance();
+        myCountDown.setContext(getActivity());
+        myCountDown.setTextView(textView);
+        return myCountDown;
+    }
+
     @Override
     public void onResume() {
         super.onResume();
 
         System.out.println("CircleTimeFragment----->onResume()");
-        countDownClock = MyCountDown.getInstance();
-        countDownClock.setContext(getActivity());
-        countDownClock.setTextView(textView);
-
+        countDownClock = setCountDownClock();
         switch (MainActivity.getState() % 4) {
             case 0:
                 if (MainActivity.getState() == sharedPreferences.getInt(KEY_COUNT_INTERVAL, 4) * 4) {
@@ -137,9 +148,7 @@ public class CircleTimeFragment extends Fragment implements View.OnClickListener
                 TimeRecord.setTaskStartTime(new Date());
                 MainActivity.setState(state + 1);
                 circleProgressBar.setProgress(0);
-                countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000 / 2, 1000);
-                countDownClock.setContext(getActivity());
-                countDownClock.setTextView(textView);
+                countDownClock = setCountDownClock(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000, 1000);
                 System.out.println("开始番茄时间, state :" + MainActivity.getState());
                 imageView.setImageResource(R.drawable.ic_action_cancel);
                 countDownClock.start();
@@ -154,6 +163,7 @@ public class CircleTimeFragment extends Fragment implements View.OnClickListener
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 System.out.println("放弃番茄时间，state：" + state);
+                                notificationAdmin.showNotification(notificationIntent, R.mipmap.logo, "番茄土豆", "");
                                 MainActivity.setState(state - 1);
                                 imageView.setImageResource(R.drawable.ic_action_playback_play);
                                 countDownClock.cancel();
@@ -175,20 +185,10 @@ public class CircleTimeFragment extends Fragment implements View.OnClickListener
                 else {
                     if (state == (sharedPreferences.getInt(KEY_COUNT_INTERVAL, 4) * 4 - 2)) {
                         //测试
-                       // MainActivity.setState(state + 1);
-                        countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_LONG_REST_LENGTH, 15)  * 60 * 1000 / 4, 1000);
-                        countDownClock.setContext(getActivity());
-                        countDownClock.setTextView(textView);
-                        //countDownClock.start();
-                        //System.out.println("开始长休息时间, state: " + state);
+                        countDownClock = setCountDownClock(sharedPreferences.getInt(KEY_LONG_REST_LENGTH, 15)  * 60 * 1000, 1000);
                     }
                     else {
-                       // MainActivity.setState(state + 1);
-                        //System.out.println("开始短休息时间, state: " + state);
-                        countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_REST_LENGTH, 5)  * 60 * 1000 / 5, 1000);  //测试
-                        countDownClock.setContext(getActivity());
-                        countDownClock.setTextView(textView);
-                        //countDownClock.start();
+                        countDownClock = setCountDownClock(sharedPreferences.getInt(KEY_REST_LENGTH, 5)  * 60 * 1000, 1000);  //测试
                     }
                 }
                 Intent intent = new Intent(getActivity(), TaskPostActivity.class);
@@ -196,14 +196,12 @@ public class CircleTimeFragment extends Fragment implements View.OnClickListener
                 startActivity(intent);
                 break;
             case 3:  //3：代表处在休息时间
-                notificationAdmin.showNotification(notificationIntent, R.mipmap.ic_launcher, "休息结束", "");
+                notificationAdmin.showNotification(notificationIntent, R.mipmap.logo, "休息结束", "");
                 System.out.println("click case 3");
                 countDownClock.cancel();
                 circleProgressBar.setProgress(0);
                 textView.setText(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) + " : 00");
-                countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000 / 2, 1000);  //测试
-                countDownClock.setContext(getActivity());
-                countDownClock.setTextView(textView);
+                countDownClock = setCountDownClock(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000, 1000);  //测试
                 if (state == (sharedPreferences.getInt(KEY_COUNT_INTERVAL, 4) * 4 - 1)) {
                     MainActivity.setState(0);
                 }
@@ -228,14 +226,11 @@ public class CircleTimeFragment extends Fragment implements View.OnClickListener
                 break;
             case 3:
                 imageView.setImageResource(R.drawable.ic_action_playback_play);
-                countDownClock = MyCountDown.getInstance(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000 / 2, 1000);  //测试
+                countDownClock = setCountDownClock(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000, 1000);  //测试
                 textView.setText(sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) + " : 00");
-                countDownClock.setContext(getActivity());
-                countDownClock.setTextView(textView);
                 System.out.println("休息倒计时结束，此时的progress是："
                         + circleProgressBar.getProgress() + " , 是否等于maxProgress: "
                         + (circleProgressBar.getProgress()==circleProgressBar.getMaxProgress()));
-                circleProgressBar.setProgress(circleProgressBar.getMaxProgress());
                 circleProgressBar.setProgress(0);
                 if (state == (sharedPreferences.getInt(KEY_COUNT_INTERVAL, 4) * 4 - 1)) {
                     state = 0;
@@ -248,33 +243,9 @@ public class CircleTimeFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    public void setCircleProgress(long millisUntilFinished) {
-        final int state = MainActivity.getState();
+    public void setCircleProgress(long millisUntilFinished, long totalTime) {
         int progress;
-        long totalTime;
-        switch (state % 4) {
-            case 1:
-                //测试
-                totalTime = sharedPreferences.getInt(KEY_TOMATO_LENGTH, 25) * 60 * 1000 / 2 ;
-                progress = (int)((circleProgressBar.getMaxProgress()) *(totalTime - millisUntilFinished)  / totalTime);
-                circleProgressBar.setProgressNotInUiThread(progress);
-                break;
-            case 3:
-                if (state == (sharedPreferences.getInt(KEY_COUNT_INTERVAL, 4) * 4 - 1)) {
-                    //测试
-                    totalTime = sharedPreferences.getInt(KEY_LONG_REST_LENGTH, 15)  * 60 * 1000 / 4;
-                    progress = (int)((circleProgressBar.getMaxProgress()) *(totalTime - millisUntilFinished)  / totalTime);
-                    System.out.println("长休息，progress = " + circleProgressBar.getProgress());
-                    circleProgressBar.setProgressNotInUiThread(progress);
-                }
-                else {
-                    totalTime = sharedPreferences.getInt(KEY_REST_LENGTH, 5)  * 60 * 1000 / 5;  //测试
-                    progress = (int)((circleProgressBar.getMaxProgress()) *(totalTime - millisUntilFinished)  / totalTime);
-                    System.out.println("短休息，progress = " + circleProgressBar.getProgress());
-                    circleProgressBar.setProgressNotInUiThread(progress);
-                }
-                break;
-        }
-
+        progress = (int)((circleProgressBar.getMaxProgress()) *(totalTime - millisUntilFinished)  / totalTime);
+        circleProgressBar.setProgressNotInUiThread(progress);
     }
 }
