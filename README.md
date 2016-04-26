@@ -16,6 +16,6 @@
 5、每四个番茄时间（可自行设定），休息15-30分钟。<br><br>
 
 
-想了解更多关于番茄钟的使用方法，可以前往[YouTube](https://www.youtube.com/watch?v=i4-MYjJd5iM)进行观看。<br>
+想了解更多关于番茄钟的使用方法，可以前往[YouTube](https://www.youtube.com/watch?v=i4-MYjJd5iM)或[优酷](http://v.youku.com/v_show/id_XMTU0ODgzOTEwNA==.html)进行观看。<br>
 本人联系方式kevinwangyw@163.com，如有任何问题，欢迎Email联系。
   
