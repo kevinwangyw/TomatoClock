@@ -1,9 +1,11 @@
 package com.kevinwang.tomatoClock;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -44,10 +46,14 @@ public class MainActivity extends AppCompatActivity {
     private static int notification_id = 0;
     private NotificationAdmin notificationAdmin;
 
+    private PowerManager powerManager;
+    private PowerManager.WakeLock WakeLock;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         System.out.println("MainActivity---->onCreate()");
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_fragment_container);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -86,22 +92,23 @@ public class MainActivity extends AppCompatActivity {
 
         System.out.println("justStart : " + justStart);
 
+        powerManager = (PowerManager)getSystemService(Context.POWER_SERVICE);
     }
 
     //安装后第一次启动进行偏好设置
     private void init(SharedPreferences sharedPreferences) {
         //测试用
         if (sharedPreferences.getInt(KEY_TOMATO_LENGTH, -1) == -1) {
-            sharedPreferences.edit().putInt(KEY_TOMATO_LENGTH, 2).commit();
+            sharedPreferences.edit().putInt(KEY_TOMATO_LENGTH, 25).commit();
         }
         if (sharedPreferences.getInt(KEY_COUNT_INTERVAL, -1) == -1) {
             sharedPreferences.edit().putInt(KEY_COUNT_INTERVAL, 4).commit();
         }
         if (sharedPreferences.getInt(KEY_LONG_REST_LENGTH, -1) == -1) {
-            sharedPreferences.edit().putInt(KEY_LONG_REST_LENGTH, 1).commit();
+            sharedPreferences.edit().putInt(KEY_LONG_REST_LENGTH, 15).commit();
         }
         if (sharedPreferences.getInt(KEY_REST_LENGTH, -1) == -1) {
-            sharedPreferences.edit().putInt(KEY_REST_LENGTH, 1).commit();
+            sharedPreferences.edit().putInt(KEY_REST_LENGTH, 5).commit();
         }
     }
 
@@ -363,6 +370,11 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         System.out.println("MainActivity---->onDestory()");
         sharedPreferences.edit().putInt(STATE, state).commit();
+        if (null != WakeLock)
+        {
+            WakeLock.release();
+            WakeLock = null;
+        }
         active = false;
     }
 
@@ -371,6 +383,11 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         System.out.println("MainActivity----->onPause()");
         sharedPreferences.edit().putInt(STATE, state).commit();
+        WakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE,"");
+        if (null != WakeLock)
+        {
+            WakeLock.acquire();
+        }
         active = false;
     }
 

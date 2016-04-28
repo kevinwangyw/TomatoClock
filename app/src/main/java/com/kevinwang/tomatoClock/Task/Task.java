@@ -23,7 +23,7 @@ public class Task {
         mFinished = false;
     }
 
-    public Task (JSONObject json) throws JSONException {
+    public Task (JSONObject json) throws JSONException {  //通过Jason数据对Task实例进行初始化
         mId = UUID.fromString(json.getString(JSON_ID));
         mContent = json.getString(JSON_TITLE);
         mFinished = json.getBoolean(JSON_FINISH);

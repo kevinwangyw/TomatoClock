@@ -6,7 +6,9 @@ import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.CountDownTimer;
+import android.os.PowerManager;
 import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by lenovo on 2016/4/13.
  */
-public class MyCountDown extends CountDownTimer {
+public class MyCountDown extends CountDownTimer {  //Timer 锁屏状态下会被干掉
     private MediaPlayer mediaPlayer;
     private static MyCountDown instance = null;
     private Context context;
@@ -80,7 +82,19 @@ public class MyCountDown extends CountDownTimer {
         else {
             //System.out.println("onTick()");
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+            if (((PowerManager)context.getSystemService(Context.POWER_SERVICE)).isInteractive())  {
+                setNotification(countDownTime);
+            }
+        }
+        else {
+            if (((PowerManager)context.getSystemService(Context.POWER_SERVICE)).isScreenOn())  {
+                setNotification(countDownTime);
+            }
+        }
+    }
 
+    private void setNotification(String countDownTime) {
         NotificationAdmin notificationAdmin = NotificationAdmin.getNotification();
         Intent intent = new Intent(context, MainActivity.class);
         if (MainActivity.getState() % 4 == 1) {

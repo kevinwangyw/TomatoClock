@@ -29,14 +29,15 @@ public class TaskJSONSerializer {
     }
 
     public void saveTasks(ArrayList<Task> Tasks) throws JSONException,IOException {
-        JSONArray array = new JSONArray();
+        JSONArray array = new JSONArray();  //获取一个JSONArray对象
         for (Task task : Tasks) {
-            array.put(task.toJSON());
+            array.put(task.toJSON());  //将task数据转换成Jason数据然后添加到JSONArray中
         }
 
         Writer writer = null;
-        try {
+        try {  //保存Jason数据到文件中
             OutputStream out = mContext.openFileOutput(mFileName,Context.MODE_PRIVATE);
+            //Open a private file associated with this Context's application package for writing. Creates the file if it doesn't already exist.
             writer = new OutputStreamWriter(out);
             writer.write(array.toString());
         }finally {
@@ -57,12 +58,13 @@ public class TaskJSONSerializer {
             while ((line = reader.readLine()) != null) {
                 jsonString.append(line);
             }
+            //通过JSONTokener的nextValue()来获得JSONObject对象，然后再通过JSONObject对象来做进一步的解析。
             JSONArray array = (JSONArray)new JSONTokener(jsonString.toString()).nextValue();
             for (int i = 0; i < array.length(); i++) {
                 Tasks.add(new Task(array.getJSONObject(i)));
             }
         }catch (FileNotFoundException e) {
-
+            System.out.println("未找到相关的Jason文件");
         }finally {
             if (reader != null) {
                 reader.close();

@@ -41,13 +41,12 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
                 setMax(40);
                 break;
         }
-
+        //inflate custom preference layout
         setLayoutResource(R.layout.seekbar_preference);
     }
 
     public SeekBarPreference(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
-        //save a value for the setting
     }
 
 
@@ -57,6 +56,8 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
 
     @Override
     protected void onBindView(View view) {
+/*        Binds the created View to the data for this Preference.
+          This is a good place to grab references to custom Views in the layout and set properties on them.*/
         super.onBindView(view);
 
         switch (getKey()) {
@@ -75,12 +76,6 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
         val_text = (TextView) view.findViewById(R.id.seekbar_info);
         val_text.setText(String.valueOf(mProgress)+" "+mtype);
     }
-
-    /* @Override
-    protected View onCreateView(ViewGroup parent) {
-        LayoutInflater layoutInflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        return layoutInflater.inflate(R.layout.seekbar_preference, parent, false);
-    }*/
 
     public void setSeekBarInfo (String type) {
         mtype = type;

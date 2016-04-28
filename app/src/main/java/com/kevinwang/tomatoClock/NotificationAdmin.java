@@ -87,16 +87,9 @@ public class NotificationAdmin {
 
     private void sent() {
         notification = notificationBuilder.build();
+
         notification.flags |= Notification.FLAG_NO_CLEAR;
         notificationManager.notify(NOTIFICATION_ID, notification);
-    }
-
-    public int getRequestCode() {
-        return requestCode;
-    }
-
-    public void setRequestCode(int requestCode) {
-        this.requestCode = requestCode;
     }
 
 }

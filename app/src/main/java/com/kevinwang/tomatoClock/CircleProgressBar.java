@@ -51,7 +51,7 @@ public class CircleProgressBar extends View{
         ringPaint.setStyle(Paint.Style.STROKE); //设置空心
         ringPaint.setStrokeWidth(progressStrokeWidth); //设置圆环宽度
         ringPaint.setAntiAlias(true);
-
+        //只绘圆周，不含圆心, 不填充扫描过的扇形
         progressPaint.setColor(Color.rgb(0xcc,0x0,0x0));
         progressPaint.setStyle(Paint.Style.STROKE);
         progressPaint.setStrokeWidth(progressStrokeWidth);
@@ -65,13 +65,20 @@ public class CircleProgressBar extends View{
         canvas.drawCircle(center, center, radius, ringPaint);
         float angle = 360 * progress / maxProgress;
         canvas.drawArc(oval, startAngle, angle, false, progressPaint);
+        //oval：指定圆弧的外轮廓矩形区域。。
+        //startAngle：圆弧的起始角度。
+        //sweepAngle：圆弧扫过的角度，顺时针方向，单位为度。
+        //useCenter：是否显示半径连线，true表示显示圆弧与圆心的半径连线，false表示不显示。
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        /*onMeasure方法是测量view和它的内容，决定measured width和measured height的，这个方法由 measure(int, int)方法唤起，
+        子类可以覆写onMeasure来提供更加准确和有效的测量。有一个约定：在覆写onMeasure方法的时候，必须调用 setMeasuredDimension(int,int)
+        来存储这个View经过测量得到的measured width and height。如果没有这么做，将会由measure(int, int)方法抛出一个IllegalStateException。*/
         final int height = getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec);
         final int width = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec);
-        final int min = Math.min(width, height);
+        final int min = Math.min(width, height);  //子类有责任确保measured height and width至少为这个View的最小height和width。
         setMeasuredDimension(min, min);
         center = width/2; //获取圆心的x坐标
         radius = (int) (center - progressStrokeWidth/2); //圆环的半径
@@ -90,6 +97,7 @@ public class CircleProgressBar extends View{
     public void setProgress(int progress){
         this.progress = progress;
         this.invalidate();
+        //Invalidate the whole view. If the view is visible, onDraw(android.graphics.Canvas) will be called at some point in the future.
     }
 
     public void setProgressNotInUiThread(int progress){
